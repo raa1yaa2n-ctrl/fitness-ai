@@ -1,746 +1,454 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f5f9">
-  <title>Gravl Clone - Full App</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4f5f9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gravl 2">
+<title>Gravl 2</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f9;--card:#fff;--ink:#14151a;--mute:#8a8d99;--blue:#4f7cff;--line:#e8eaf2;--sh:0 8px 28px rgba(30,40,90,.07)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0}
+html,body{height:100%}
+body{font-family:Vazirmatn,Tahoma,system-ui,sans-serif;background:var(--bg);color:var(--ink);padding-top:env(safe-area-inset-top)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+svg{display:block}
+.ic{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#app{max-width:480px;margin:0 auto;padding:18px 16px calc(120px + env(safe-area-inset-bottom))}
+h1{font-size:26px;font-weight:800;margin:6px 4px 16px}
+h3{font-size:16px;font-weight:700}
+.card{background:var(--card);border-radius:28px;padding:18px;box-shadow:var(--sh)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.span2{grid-column:1/-1}
+.mute{color:var(--mute);font-size:13px}
+.big{font-size:34px;font-weight:800}
+.pill{background:var(--ink);color:#fff;border-radius:999px;padding:10px 20px;font-weight:600;font-size:14px}
+.pill.light{background:#eef0f7;color:var(--ink)}
+.chips{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 14px;scrollbar-width:none}
+.chip{flex:none;background:#fff;border-radius:999px;padding:10px 18px;font-size:14px;box-shadow:var(--sh)}
+.chip.on{background:var(--ink);color:#fff}
+.row{display:flex;align-items:center;gap:12px}
+.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:12px}
+.bar{height:10px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue);border-radius:9px;transition:width .4s}
+.ex{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ex .ico{width:52px;height:52px;border-radius:18px;background:#eaf0ff;color:var(--blue);display:grid;place-items:center}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom));width:min(448px,calc(100% - 28px));background:#fff;border-radius:999px;box-shadow:0 10px 34px rgba(20,30,80,.16);display:flex;justify-content:space-around;align-items:center;padding:10px 8px;z-index:20}
+nav button{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;color:var(--mute)}
+nav button.on{color:var(--ink)}
+nav .plus{background:var(--ink);color:#fff;width:54px;height:54px}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;display:none}
+.overlay.show{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:#111216;color:#fff;border-radius:28px 28px 0 0;padding:22px 18px calc(24px + env(safe-area-inset-bottom));z-index:50;transform:translateY(105%);transition:transform .3s;max-width:480px;margin:0 auto}
+.sheet.show{transform:none}
+.sheet .opt{display:flex;align-items:center;gap:14px;width:100%;padding:16px;border-radius:20px;background:#1d1f27;margin-top:10px;text-align:right}
+.modal{position:fixed;inset:0;z-index:60;display:none;place-items:center;background:rgba(0,0,0,.45);padding:20px}
+.modal.show{display:grid}
+.modal .card{width:100%;max-width:420px}
+input[type=text],input[type=password],input[type=number]{width:100%;border:1px solid var(--line);border-radius:16px;padding:13px 14px;font:inherit;background:#fafbff;direction:ltr;text-align:left}
+input[type=range]{width:100%;accent-color:var(--ink)}
+.chat{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;min-height:40vh}
+.msg{max-width:85%;padding:12px 15px;border-radius:22px;font-size:14.5px;line-height:1.8;white-space:pre-wrap}
+.msg.u{align-self:flex-start;background:var(--ink);color:#fff;border-bottom-right-radius:6px}
+.msg.a{align-self:flex-end;background:#fff;box-shadow:var(--sh);border-bottom-left-radius:6px}
+.msg.t{align-self:center;background:#eaf0ff;color:var(--blue);font-size:12px;padding:6px 12px}
+.composer{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom));width:min(448px,calc(100% - 28px));display:flex;gap:8px;align-items:center;background:#fff;border-radius:999px;padding:8px;box-shadow:var(--sh);z-index:15}
+.composer input{border:0;background:none;direction:rtl;text-align:right;padding:8px 10px}
+.composer input:focus{outline:0}
+.rb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#eef0f7;flex:none}
+.rb.rec{background:#ff4d5e;color:#fff}
+.rb.dark{background:var(--ink);color:#fff}
+#player{position:fixed;inset:0;background:#000;color:#fff;z-index:80;display:none;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(30px + env(safe-area-inset-top)) 24px calc(34px + env(safe-area-inset-bottom));text-align:center}
+#player.show{display:flex}
+#player .timer{font-size:84px;font-weight:800;font-variant-numeric:tabular-nums}
+#player .btn{background:#fff;color:#000;border-radius:999px;padding:16px 34px;font-weight:800;font-size:17px;width:100%;max-width:320px}
+.set-dots{display:flex;gap:8px;justify-content:center}
+.set-dots i{width:34px;height:6px;border-radius:5px;background:#333}
+.set-dots i.on{background:#fff}
+.set-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.set-item:last-child{border:0}
+.ico-c{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;color:#fff}
+#toast{position:fixed;top:calc(14px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:14px;z-index:90;transition:transform .3s}
+#toast.show{transform:translateX(-50%)}
+.typing{opacity:.6}
+#splash{position:fixed;inset:0;background:#fff;z-index:200;display:grid;place-items:center;text-align:center;transition:opacity .5s}
+#splash.hide{opacity:0;pointer-events:none}
+#splash svg{margin:auto;animation:pop .7s ease-out}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
-    /* =========================================
-       RESET & VARIABLES
-    ========================================= */
-    :root {
-      --bg: #f4f5f9; 
-      --surface: #ffffff; 
-      --surface-pill: #f0f0f5;
-      --fg: #111111; 
-      --muted: #8e929d; 
-      --accent: #000000; 
-      --blue: #3b82f6;
-      --danger: #ef4444;
-      --gold: #f59e0b;
-      --gold-bg: #fef3c7;
-      --radius: 28px;
-      --shadow: 0 4px 20px rgba(0,0,0,0.03);
-    }
-    
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Vazirmatn', system-ui, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 110px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
-
-    /* =========================================
-       SCREENS & LAYOUT
-    ========================================= */
-    .screen { display: none; padding: 20px 16px; animation: fadeIn 0.3s ease; flex: 1; }
-    .screen.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    
-    /* =========================================
-       HEADER PILLS
-    ========================================= */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
-    .pill-btn { background: var(--surface); padding: 10px 18px; border-radius: 50px; font-size: 14px; font-weight: 700; color: var(--fg); display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow); border: none; cursor: pointer; transition: 0.2s;}
-    .pill-btn:active { transform: scale(0.96); }
-    .pill-icon { background: var(--surface); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow); cursor: pointer; border: none; }
-    .pill-icon svg { width: 22px; height: 22px; stroke: var(--fg); fill: none; stroke-width: 2; }
-
-    /* =========================================
-       HOME SCREEN (Bento Grid)
-    ========================================= */
-    .bento-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-bottom: 24px; }
-    .bento-col { display: flex; flex-direction: column; gap: 12px; }
-    .bento-card { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center; cursor: pointer; }
-    .bento-card.center { align-items: center; text-align: center; }
-    
-    .card-title { font-size: 13px; color: var(--muted); font-weight: 700; margin-bottom: 12px; }
-    .streak-val { font-size: 28px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 8px;}
-    .ring-val { font-size: 22px; font-weight: 900; border: 4px solid var(--surface-pill); border-radius: 50%; width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; margin: 0 auto; color: var(--blue);}
-    
-    .mascot-hero { width: 100px; height: 100px; margin-bottom: 10px; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%233b82f6"/><circle cx="35" cy="45" r="5" fill="white"/><circle cx="65" cy="45" r="5" fill="white"/><path d="M 40 65 Q 50 75 60 65" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/></svg>') no-repeat center/contain; filter: drop-shadow(0 10px 15px rgba(59,130,246,0.3)); }
-    .hero-title { font-size: 17px; font-weight: 800; line-height: 1.4; margin-bottom: 16px; text-align: center; }
-    .btn-black { background: var(--accent); color: white; border: none; border-radius: 50px; padding: 14px 20px; font-size: 15px; font-weight: 700; width: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
-    .btn-black:active { transform: scale(0.97); }
-
-    /* =========================================
-       SECTIONS & SCROLLS
-    ========================================= */
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;}
-    .section-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
-    .badge-pro { background: var(--gold-bg); color: #d97706; font-size: 11px; padding: 4px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 4px; font-weight: 800;}
-    
-    .h-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-    .h-scroll::-webkit-scrollbar { display: none; }
-    
-    .cat-pill { background: var(--surface); border: none; padding: 10px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; color: var(--muted); white-space: nowrap; cursor: pointer; transition: 0.2s; box-shadow: var(--shadow);}
-    .cat-pill.active { background: var(--accent); color: white; }
-    
-    .item-card { min-width: 280px; background: var(--surface); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; }
-    .item-card.full { min-width: 100%; margin-bottom: 16px; }
-    .card-img { width: 100%; height: 120px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
-
-    /* =========================================
-       STATS & NUTRITION SCREEN
-    ========================================= */
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .stat-card { background: var(--surface); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: space-between; min-height: 140px; }
-    .stat-card.full { grid-column: span 2; min-height: 120px; align-items: center; justify-content: center; text-align: center;}
-    
-    .stat-icon { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--surface-pill); }
-    .stat-val { font-size: 26px; font-weight: 900; color: var(--fg); margin-top: 10px; }
-    .stat-lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
-
-    .ring-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;}
-    .ring-box { min-width: 95px; background: var(--surface); padding: 15px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: var(--shadow); }
-    .ring-circle { width: 55px; height: 55px; border-radius: 50%; border: 5px solid var(--surface-pill); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; }
-    
-    .weight-slider { width: 100%; margin-top: 15px; }
-    .weight-track { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); font-weight: 700; position: relative; margin-top: 5px; }
-    .weight-track::before { content: ''; position: absolute; top: -10px; left: 0; right: 0; height: 2px; background: var(--surface-pill); }
-    
-    /* =========================================
-       PROFILE & SETTINGS
-    ========================================= */
-    .profile-header-card { background: linear-gradient(135deg, #e0f2fe, #ffffff); border-radius: var(--radius); padding: 30px; display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid #bae6fd;}
-    .level-badge { background: var(--surface); padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 800; margin-top: 15px; box-shadow: var(--shadow); }
-    
-    .settings-group { background: var(--surface); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); }
-    .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--bg); cursor: pointer; }
-    .settings-item:last-child { border-bottom: none; }
-    .settings-item-left { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 15px;}
-    .settings-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-    .settings-icon svg { width: 18px; height: 18px; stroke-width: 2; }
-    .settings-item-right { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 8px; font-weight: 600;}
-    
-    .switch { width: 50px; height: 28px; border-radius: 20px; background: var(--surface-pill); border: none; position: relative; cursor: pointer; transition: 0.3s; }
-    .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s; }
-    .switch.on { background: var(--blue); }
-    .switch.on::after { left: 25px; }
-
-    /* =========================================
-       CHAT UI
-    ========================================= */
-    .chat-container { display: flex; flex-direction: column; gap: 16px; padding-bottom: 100px; min-height: 50vh; }
-    .bubble { padding: 14px 18px; border-radius: 24px; font-size: 15px; width: fit-content; max-width: 85%; line-height: 1.7; font-weight: 500; word-wrap: break-word;}
-    .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 6px; box-shadow: var(--shadow); }
-    .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 6px; }
-    
-    .chat-input-area { position: fixed; bottom: 100px; left: 16px; right: 16px; display: flex; align-items: center; gap: 8px; background: var(--surface); padding: 8px; border-radius: 50px; z-index: 100; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
-    .chat-input-area input { flex: 1; min-width: 0; background: transparent; border: none; color: var(--fg); padding: 10px 12px; outline: none; font-size: 15px; font-family: inherit;}
-    .icon-btn { background: var(--surface-pill); color: var(--fg); border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
-    .icon-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
-    .icon-btn.recording { background: var(--danger); color: white; animation: pulse 1s infinite; }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    .btn-send { background: var(--accent); color: white; }
-
-    /* =========================================
-       BOTTOM NAVIGATION
-    ========================================= */
-    .nav-wrapper { position: fixed; bottom: 16px; left: 16px; right: 16px; display: flex; justify-content: center; z-index: 200; }
-    .nav-bar { width: 100%; max-width: 400px; height: 72px; background: var(--surface); border-radius: 40px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; padding: 0 10px; position: relative; }
-    .nav-btn { background: none; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; height: 100%; transition: 0.2s;}
-    .nav-btn svg { width: 24px; height: 24px; stroke-width: 2; fill: none; stroke: var(--muted); transition: 0.2s;}
-    .nav-btn.active svg { stroke: var(--accent); }
-    
-    .nav-plus { width: 60px; height: 60px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; margin-top: -20px; flex-shrink: 0; }
-    .nav-plus svg { width: 28px; height: 28px; stroke: white; stroke-width: 2.5; fill: none; }
-
-    /* =========================================
-       MODALS & BOTTOM SHEETS
-    ========================================= */
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 500; display: none; opacity: 0; transition: opacity 0.3s; backdrop-filter: blur(4px); }
-    .modal-overlay.show { display: block; opacity: 1; }
-    .modal-content { position: fixed; bottom: 0; left: 0; right: 0; background: #18181b; color: white; border-radius: 32px 32px 0 0; padding: 24px; z-index: 600; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-    .modal-content.show { transform: translateY(0); }
-    .modal-handle { width: 40px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 0 auto 20px; }
-    
-    .sheet-item { display: flex; align-items: center; justify-content: flex-start; gap: 16px; padding: 16px; border-radius: 20px; cursor: pointer; transition: 0.2s; margin-bottom: 8px; background: rgba(255,255,255,0.05);}
-    .sheet-item:active { background: rgba(255,255,255,0.1); }
-    .sheet-icon { width: 48px; height: 48px; border-radius: 16px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; }
-    .sheet-icon svg { width: 24px; height: 24px; stroke: white; fill: none; stroke-width: 2; }
-    .sheet-text h4 { margin: 0 0 4px 0; font-size: 16px; font-weight: 700; }
-    .sheet-text p { margin: 0; font-size: 13px; color: #a1a1aa; }
-
-    .api-modal { background: var(--surface); color: var(--fg); }
-    .api-modal .modal-handle { background: #ddd; }
-    .api-modal input { width: 100%; padding: 16px; background: var(--bg); border: none; border-radius: 16px; margin-bottom: 16px; font-family: inherit; margin-top: 10px; font-size: 15px; }
-  </style>
+:root{--bg:#f4f5f8}
+.card{border-radius:34px}
+body.dark{--bg:#101116;--card:#1c1d24;--ink:#f3f4f8;--mute:#9a9dab;--line:#2b2d37;--sh:0 8px 24px rgba(0,0,0,.4)}
+body.dark .chip,body.dark .msg.a,body.dark .composer{background:var(--card)}
+body.dark .rb{background:#2b2d37}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.tp{height:46px;border-radius:999px;background:var(--card);box-shadow:var(--sh);display:flex;align-items:center;gap:8px;padding:0 18px;font-weight:700;font-size:15px;color:var(--ink)}
+.tp.sq{width:46px;padding:0;justify-content:center}.tp.off{opacity:.4}.sp{flex:1}
+nav{left:92px;right:14px;transform:none;width:auto;height:64px;background:rgba(236,238,246,.92);backdrop-filter:blur(14px);padding:6px 10px;bottom:calc(14px + env(safe-area-inset-bottom))}
+nav button{width:52px;height:52px;color:#b3b6c4}
+nav button.on{background:#fff;color:#14151a;box-shadow:0 4px 14px rgba(20,30,80,.12)}
+body.dark nav{background:rgba(34,36,46,.92)}body.dark nav button.on{background:#2c2e3a;color:#fff}
+.fab{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom));width:64px;height:64px;border-radius:50%;background:#16171c;color:#fff;display:grid;place-items:center;z-index:45;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.sheet{left:14px;right:auto;margin:0;bottom:calc(96px + env(safe-area-inset-bottom));width:min(330px,calc(100% - 28px));max-width:none;border-radius:34px;padding:10px 12px;background:#1e1f24;transform:translateY(16px) scale(.92);transform-origin:bottom left;opacity:0;pointer-events:none;transition:transform .25s,opacity .2s}
+.sheet.show{transform:none;opacity:1;pointer-events:auto}
+.sheet .opt{display:flex;align-items:center;justify-content:space-between;gap:12px;background:none;margin:0;padding:11px 10px;border-radius:22px;text-align:right}
+.opt .tx{display:flex;flex-direction:column}.opt small{color:#9a9dab;font-size:12.5px;margin-top:2px}
+.opt .ico{width:46px;height:46px;border-radius:50%;background:#2b2d34;display:grid;place-items:center;flex:none}
+@media(min-width:520px){nav{left:calc(50% - 240px + 92px);right:calc(50% - 240px + 14px)}.fab,.sheet{left:calc(50% - 240px + 14px)}}
+.fg{display:grid;grid-template-columns:1.15fr 1fr;gap:12px}
+.big1{grid-row:1/3;position:relative;min-height:250px;display:flex;flex-direction:column;gap:6px;padding-top:22px}
+.big1 svg{position:absolute;bottom:-4px;left:6px}
+.num{font-size:44px;font-weight:800;margin:8px 0}.num2{font-size:30px;font-weight:800;margin-top:8px}
+.sm{padding:16px 18px;min-height:118px}
+.mrow{display:flex;gap:10px;overflow-x:auto;padding:14px 2px 4px;scrollbar-width:none}
+.mp{flex:none;min-width:150px;background:var(--card);border-radius:999px;box-shadow:var(--sh);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{min-height:150px;padding:16px 18px}
+.wfill{position:absolute;left:0;right:0;bottom:0;background:#cfe0ff;opacity:.7}
+.ruler{display:flex;justify-content:space-between;align-items:flex-end;height:20px;margin:12px 0 4px}
+.ruler i{width:1.5px;background:#c3c6d2}
+.s3{display:flex;justify-content:space-around;text-align:center;margin:16px 0}
+.s3>div{flex:1;border-left:1px solid var(--line)}.s3>div:last-child{border:0}
+.wk{display:flex;justify-content:space-between;margin-top:14px;text-align:center;font-size:14px}
+.wk i{display:block;width:6px;height:6px;border-radius:50%;background:var(--ink);margin:6px auto 0}
+.park{margin:-18px -16px 14px;height:430px;position:relative;overflow:hidden;background:linear-gradient(#cfe9ff 0,#e8f5ff 38%,#bfe08f 38%,#a9d47b 100%)}
+.park::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 12% 16%,#5aa862 0 70px,transparent 71px),radial-gradient(circle at 92% 12%,#6bb96f 0 80px,transparent 81px),radial-gradient(circle at 68% 34%,#7cc27a 0 38px,transparent 39px)}
+.park .top{position:relative;padding:14px 16px 0;margin:0}
+.park .tp{background:rgba(255,255,255,.6);backdrop-filter:blur(8px);color:#14151a}
+.park .mc{position:absolute;bottom:0;left:50%;transform:translateX(-50%)}
+.sw{width:58px;height:34px;border-radius:99px;background:#e1e3ec;position:relative;flex:none;transition:.2s}
+.sw i{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s}
+.sw.on{background:var(--blue)}.sw.on i{right:28px}
+.pill.blue{background:#0a6be0}
+#tour{position:fixed;inset:0;background:rgba(16,18,26,.65);z-index:150;display:none}#tour.show{display:block}
+.bub{position:absolute;bottom:285px;background:#fff;color:#14151a;border-radius:30px;padding:20px;width:min(300px,78%)}
+.bub.r{right:16px}.bub.l{left:16px}.bub p{margin:6px 0 16px;color:#555;line-height:1.9;font-size:15px}
+.bub .dots{display:flex;gap:6px;margin-bottom:12px}.bub .dots i{width:9px;height:9px;border-radius:50%;background:#dcdfe8}.bub .dots i.on{width:30px;border-radius:9px;background:#0a6be0}
+.tm{position:absolute;bottom:80px}.tm.r{right:14px}.tm.l{left:14px}
+</style>
 </head>
 <body>
+<div id="app"></div>
+<div class="composer" id="composer" style="display:none">
+  <button class="rb" id="micBtn" aria-label="میکروفن"></button>
+  <input type="text" id="chatIn" placeholder="از مربی بپرس یا دستور بده...">
+  <button class="rb dark" id="sendBtn" aria-label="ارسال"></button>
+</div>
+<nav id="nav"></nav><button class="fab" id="fab" data-nav="plus" aria-label="افزودن"></button>
+<div class="overlay" id="ov"></div>
+<div class="sheet" id="sheet">
+  <button class="opt" data-act="log-workout"><span class="tx"><b>ثبت تمرین</b><small id="shRem"></small></span><span class="ico" data-i="dumbbell"></span></button>
+  <button class="opt" data-act="video"><span class="tx"><b>ویدیوی تمرین</b><small>ویدیو بفرست، مربی حساب می‌کنه</small></span><span class="ico" data-i="video"></span></button>
+  <button class="opt" data-act="food-photo"><span class="tx"><b>ثبت با عکس</b><small>از غذات عکس بگیر</small></span><span class="ico" data-i="camera"></span></button>
+  <button class="opt" data-act="food-text"><span class="tx"><b>توضیح غذا</b><small>بنویس چی خوردی</small></span><span class="ico" data-i="edit"></span></button>
+  <button class="opt" data-act="log-food"><span class="tx"><b>ثبت دستی غذا</b><small>کالری و ماکروها رو خودت بنویس</small></span><span class="ico" data-i="search"></span></button>
+</div>
+<div class="modal" id="keyModal"><div class="card stack">
+  <h3>کلید API جمینای</h3>
+  <p class="mute">کلید فقط در حافظه همین مرورگر (localStorage) ذخیره می‌شود و داخل کد نیست.</p>
+  <input type="password" id="keyIn" placeholder="AIza...">
+  <div class="row"><button class="pill" id="keySave">ذخیره</button><button class="pill light" id="keyClose">بستن</button></div>
+</div></div>
+<div class="modal" id="formModal"><div class="card stack" id="formBox"></div></div>
+<div id="player"></div>
+<div id="tour"></div><div id="toast"></div>
+<input type="file" id="vidIn" accept="video/*" hidden>
+<input type="file" id="imgIn" accept="image/*" capture="environment" hidden>
 
-  <main id="screens">
-    <!-- =========================================
-         HOME SCREEN
-    ========================================= -->
-    <section class="screen active" data-screen="home">
-      <div class="top-header">
-        <button class="pill-icon" onclick="switchTab('profile')">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        </button>
-        <button class="pill-btn" onclick="switchTab('coach')">
-          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          چت با مربی
-        </button>
-        <button class="pill-btn" onclick="switchTab('train')" style="background:var(--accent); color:white;">تمرین</button>
-      </div>
+<script>
+/* ---------- Icons (outline SVG) ---------- */
+const P={
+home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+stats:'<path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.2A8 8 0 1 1 21 12z"/><path d="M9 11h6M9 14h4"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+dumbbell:'<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
+apple:'<path d="M12 7c-2-2-6-1-6 4 0 4 2 9 4 9 1 0 1.2-.6 2-.6s1 .6 2 .6c2 0 4-5 4-9 0-5-4-6-6-4z"/><path d="M12 7c0-2 1-3 3-4"/>',
+camera:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+video:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="M16 11l5-3v8l-5-3"/>',
+mic:'<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
+send:'<path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4z"/>',
+flame:'<path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/>',
+target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11z"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',
+speaker:'<path d="M4 9v6h4l5 4V5L8 9z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',
+check:'<path d="M5 12l5 5 9-10"/>',
+x:'<path d="M6 6l12 12M18 6L6 18"/>',
+gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',
+bowl:'<path d="M4 12h16a8 8 0 0 1-16 0z"/><path d="M9 4c0 2 1.500 2 1.500 4M14 4c0 2 1.500 2 1.500 4M9 21h6"/>',
+cal:'<rect x="4" y="5" width="16" height="15" rx="3"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+chevR:'<path d="M9 6l6 6-6 6"/>',chevL:'<path d="M15 6l-6 6 6 6"/>',
+play:'<path d="M7 5l12 7-12 7z" fill="currentColor"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+search:'<circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/>',
+trophy:'<path d="M8 4h8v6a4 4 0 0 1-8 0z"/><path d="M8 6H4c0 3 1 4 4 5M16 6h4c0 3-1 4-4 5M12 14v4M8 20h8"/>'
+};
+const I=(n,s)=>`<svg class="ic" viewBox="0 0 24 24"${s?` style="width:${s}px;height:${s}px"`:''}>${P[n]}</svg>`;
 
-      <div class="bento-grid">
-        <div class="bento-col">
-          <div class="bento-card center">
-            <div class="card-title">پیوستگی</div>
-            <div class="streak-val">
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="#ef4444"><path d="M12 2c0 0-4 4-4 9a4 4 0 0 0 8 0c0-5-4-9-4-9zm0 14a2 2 0 0 1-2-2c0-1 1-3 2-4 1 1 2 3 2 4a2 2 0 0 1-2 2z"/></svg>
-              <span id="home-streak">0</span>
-            </div>
-          </div>
-          <div class="bento-card center">
-            <div class="card-title">هدف هفتگی</div>
-            <div class="ring-val">0/7</div>
-          </div>
-        </div>
-        <div class="bento-card center" style="background: linear-gradient(145deg, #e0f2fe, #ffffff); border: 1px solid #bae6fd;" onclick="switchTab('train')">
-          <div class="mascot-hero"></div>
-          <div class="card-title">امروز</div>
-          <div class="hero-title">یه چالش ۳۰ روزه شروع کن</div>
-          <button class="btn-black">+ انتخاب چالش</button>
-        </div>
-      </div>
+/* ---------- State ---------- */
+const KEY='gravl_state_v1',today=()=>new Date().toISOString().slice(0,10);
+const def={date:today(),goal:2200,eaten:0,burned:0,water:0,waterGoal:2500,weight:70,p:0,c:0,f:0,pG:150,cG:250,fG:70,
+ foods:[],workouts:[],streak:0,lastActive:'',weekly:0,weeklyGoal:4,fastStart:null,name:'ورزشکار',xp:0,sex:'',age:0,height:0,steps:8500,dark:false,toured:false,muscle:'شکم',chat:[],history:[]};
+let S=Object.assign({},def,JSON.parse(localStorage.getItem(KEY)||'{}'));
+if(S.date!==today()){S.history=(S.history||[]).concat([{d:S.date,eaten:S.eaten,burned:S.burned,w:S.weight}]).slice(-60);
+ Object.assign(S,{date:today(),eaten:0,burned:0,water:0,p:0,c:0,f:0,foods:[]})}
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+const getKey=()=>localStorage.getItem('gemini_api_key')||'';
+const MODEL='gemini-2.5-flash';
+let page='food',busy=false;
 
-      <div class="section-header">
-        <div class="section-title">چالش‌های ۳۰ روزه</div>
-      </div>
-      
-      <div class="h-scroll">
-        <div class="item-card" style="background: linear-gradient(145deg, #fff7ed, #ffffff); border: 1px solid #ffedd5;" onclick="switchTab('train')">
-          <div class="card-img" style="background: transparent;">
-            <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="#f97316" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
-          </div>
-          <div class="badge-pro">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>
-            مخصوص تو
-          </div>
-          <div style="font-weight: 800; font-size: 18px; margin-bottom: 4px;">چربی سوزی</div>
-          <div style="color: var(--muted); font-size: 14px;">چون کل بدن رو می‌خوای</div>
-        </div>
-      </div>
-    </section>
+/* ---------- Data ---------- */
+const MUSCLES={
+'شکم':[['کرانچ',3,15,6],['پلانک',3,40,5],['بالا آوردن پا',3,12,7],['دوچرخه',3,20,7]],
+'سینه':[['شنا',3,12,8],['پرس سینه دمبل',4,10,10],['فلای دمبل',3,12,7]],
+'بازو':[['جلو بازو دمبل',3,12,6],['پشت بازو سیم‌کش',3,12,6],['جلو بازو چکشی',3,10,6]],
+'پا':[['اسکات',4,12,12],['لانچ',3,12,9],['ددلیفت رومانیایی',3,10,10]],
+'شانه':[['پرس شانه',3,10,8],['نشر از جانب',3,15,6]],
+'پشت':[['زیربغل دمبل',3,12,8],['بارفیکس',3,8,10]]};
+const LV=x=>Math.floor(x/200)+1;
 
-    <!-- =========================================
-         TRAIN SCREEN
-    ========================================= -->
-    <section class="screen" data-screen="train">
-      <div class="top-header">
-        <h1 style="font-size: 24px; margin:0; font-weight: 900;">تمرین</h1>
-        <button class="pill-btn" onclick="switchTab('coach')">چت با مربی</button>
-      </div>
-      
-      <div class="h-scroll" style="margin-bottom: 20px;">
-        <button class="cat-pill active" onclick="selectCat(this)">شکم</button>
-        <button class="cat-pill" onclick="selectCat(this)">سینه</button>
-        <button class="cat-pill" onclick="selectCat(this)">بازو</button>
-        <button class="cat-pill" onclick="selectCat(this)">پا</button>
-        <button class="cat-pill" onclick="selectCat(this)">کمر</button>
-      </div>
+/* ---------- Helpers ---------- */
+const $=s=>document.querySelector(s);
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),2400)}
+const fa=n=>Number(n).toLocaleString('fa-IR');
+function touchStreak(){if(S.lastActive===today())return;const y=new Date(Date.now()-864e5).toISOString().slice(0,10);S.streak=S.lastActive===y?S.streak+1:1;S.lastActive=today()}
+const mascot=(w=90)=>`<svg width="${w}" height="${Math.round(w*1.25)}" viewBox="0 0 100 125"><ellipse cx="50" cy="119" rx="24" ry="4" fill="#0002"/><rect x="33" y="88" width="15" height="30" rx="7.500" fill="#3f6df0"/><rect x="52" y="88" width="15" height="30" rx="7.500" fill="#3f6df0"/><rect x="6" y="52" width="16" height="44" rx="8" fill="#4f7cff" transform="rotate(8 14 52)"/><rect x="78" y="52" width="16" height="44" rx="8" fill="#4f7cff" transform="rotate(-8 86 52)"/><path d="M50 6c18 0 30 12 30 34v50c0 6-5 10-10 10H30c-5 0-10-4-10-10V40C20 18 32 6 50 6z" fill="#5b87ff"/><path d="M33 16c4-5 10-7 17-7" stroke="#fff7" stroke-width="5" stroke-linecap="round" fill="none"/><circle cx="39" cy="36" r="7.500" fill="#fff"/><circle cx="61" cy="36" r="7.500" fill="#fff"/><circle cx="41" cy="37" r="3.600" fill="#14151a"/><circle cx="63" cy="37" r="3.600" fill="#14151a"/><path d="M44 50q6 5 12 0" stroke="#14151a" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`;
+const ring=(v,g,col,lab)=>{const r=26,C=2*Math.PI*r,pc=Math.min(1,v/g);return `<div style="text-align:center"><svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="${r}" fill="none" stroke="#eceef6" stroke-width="7"/><circle cx="34" cy="34" r="${r}" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${C*pc} ${C}" transform="rotate(-90 34 34)"/><text x="34" y="39" text-anchor="middle" font-size="13" font-weight="700" fill="#14151a">${fa(Math.round(v))}</text></svg><div class="mute" style="margin-top:4px">${lab}</div></div>`};
 
-      <div class="item-card full">
-        <div style="display: flex; justify-content: space-between;">
-          <div>
-            <div style="font-size: 13px; color: var(--muted); font-weight: 700;">یک‌روزه · بدون وسیله</div>
-            <div style="font-size: 20px; font-weight: 900; margin: 8px 0;">تمرین شکم</div>
-            <div style="display: flex; gap: 12px; font-size: 13px; font-weight: 600; color: var(--muted);">
-              <span>۱۵ دقیقه</span><span>۴ حرکت</span><span>۳ تکرار</span>
-            </div>
-          </div>
-          <div class="card-img" style="width: 80px; height: 80px; margin:0; background:#eff6ff;">
-            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-          </div>
-        </div>
-        <button class="btn-black" style="margin-top: 20px;" onclick="addWorkoutLog('تمرین شکم')">▶ شروع</button>
-      </div>
+/* ---------- Pages ---------- */
+const fz=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const hdr=r=>`<div class="top">${r}<span class="sp"></span><button class="tp" data-nav="chat">چت با مربی${I('chat',20)}</button><button class="tp sq" data-nav="settings" aria-label="تنظیمات">${I('gear')}</button></div>`;
+const bar2=t=>`<div class="top"><button class="tp sq" data-nav="food" aria-label="بازگشت">${I('chevR')}</button><span class="sp"></span><span class="tp">${t}</span><span class="sp"></span><span style="width:46px"></span></div>`;
+const fld=(t,k,l,type='number')=>form(t,[['v',l,type]],v=>{if(v.v!=='')S[k]=type==='number'?+v.v:v.v});
 
-      <div class="item-card full">
-        <div style="display: flex; justify-content: space-between;">
-          <div>
-            <div style="font-size: 13px; color: var(--muted); font-weight: 700;">با وزن بدن · خانگی</div>
-            <div style="font-size: 20px; font-weight: 900; margin: 8px 0;">تمرین سینه</div>
-            <div style="display: flex; gap: 12px; font-size: 13px; font-weight: 600; color: var(--muted);">
-              <span>۲۰ دقیقه</span><span>۵ حرکت</span><span>۴ تکرار</span>
-            </div>
-          </div>
-          <div class="card-img" style="width: 80px; height: 80px; margin:0; background:#fef3c7;">
-            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#d97706" stroke-width="2"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path><path d="M6 10v4"></path><path d="M18 10v4"></path></svg>
-          </div>
-        </div>
-        <button class="btn-black" style="margin-top: 20px;" onclick="addWorkoutLog('تمرین سینه')">▶ شروع</button>
-      </div>
-    </section>
+function renderFood(){
+ const left=S.goal-S.eaten+S.burned,fs=S.fastStart?(Date.now()-S.fastStart)/1000:0,hh=Math.floor(fs/3600),mm=Math.floor(fs%3600/60);
+ const mac=[['کربوهیدرات',S.c,S.cG,'#ff9b3d'],['پروتئین',S.p,S.pG,'#4f7cff'],['چربی',S.f,S.fG,'#2fb67c']];
+ const rg=(v,g,c)=>{const r=17,C=2*Math.PI*r,p=Math.min(1,v/g);return `<svg width="46" height="46" viewBox="0 0 44 44" style="position:static"><circle cx="22" cy="22" r="${r}" fill="none" stroke="#e9ebf2" stroke-width="5"/><circle cx="22" cy="22" r="${r}" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*p} ${C}" transform="rotate(-90 22 22)"/></svg>`};
+ const tick=Array.from({length:23},(_,i)=>`<i style="height:${i%5===2?18:10}px"></i>`).join('');
+ const wr=Math.round(S.weight);
+ return hdr(`<span class="tp sq off">${I('chevR')}</span><span class="tp">${I('cal',20)}امروز</span><span class="tp sq off">${I('chevL')}</span>`)+`
+ <div class="fg"><div class="card big1"><b>کالری خورده‌شده</b><div class="num">${fa(S.eaten)}</div><div class="mute">از ${fa(S.goal)} کیلوکالری</div>${mascot(92)}</div>
+ <div class="card sm"><span class="mute">باقی‌مانده</span><div class="num2">${fa(Math.max(0,left))}</div></div>
+ <div class="card sm"><span class="mute">کالری سوزانده‌شده</span><div class="num2">${fa(S.burned)}</div></div></div>
+ <div class="mrow">${mac.map(m=>`<div class="mp"><div><div class="mute">${m[0]}</div><b>${fa(Math.round(m[1]))} گرم</b></div>${rg(m[1],m[2],m[3])}</div>`).join('')}</div>
+ <div class="card" style="margin:14px 0 12px"><div class="row between"><span class="mute">برنامهٔ غذایی امروز</span><span style="color:var(--blue);font-size:14px">${fa(S.foods.length)} وعده</span></div>${S.foods.length?S.foods.map(x=>`<div class="set-item"><div style="flex:1">${x.name}<div class="mute">${fa(x.p)} پروتئین · ${fa(x.c)} کربو · ${fa(x.f)} چربی</div></div><b>${fa(x.cal)}</b></div>`).join(''):'<p class="mute" style="text-align:center;padding:26px 0">هنوز غذایی ثبت نشده؛ از دکمه + شروع کن.</p>'}</div>
+ <div class="g2">
+ <div class="card tile" style="position:relative;overflow:hidden"><div class="wfill" style="height:${Math.min(100,S.water/S.waterGoal*100)*.45}%"></div><div class="row between" style="position:relative"><span class="mute">آب</span><button class="rb" data-water="250" aria-label="آب">${I('plus',20)}</button></div><div class="num2" style="position:relative">${fa(S.water)}</div><div class="mute" style="position:relative">از ${fa(S.waterGoal)} میلی‌لیتر</div></div>
+ <div class="card tile"><div class="row between"><span class="mute">فعالیت</span><button class="rb" data-act="log-workout" aria-label="فعالیت">${I('plus',20)}</button></div><div class="num2">${fa(S.burned)}</div><div class="mute">کالری</div></div>
+ <div class="card tile"><div class="row between"><span class="mute">فستینگ</span><button class="rb" data-act="fast" aria-label="فستینگ">${I(S.fastStart?'x':'play',18)}</button></div><div class="num2">${S.fastStart?fz(hh)+':'+fz(String(mm).padStart(2,'0')):'—'}</div><div class="mute" style="margin-bottom:10px">${S.fastStart?'در حال فستینگ':'غیرفعال'}</div><div class="bar"><i style="width:${Math.min(100,fs/3600/14*100)}%"></i></div></div>
+ <div class="card tile"><div class="row between"><span class="mute">وزن</span><button class="rb" data-act="weight" aria-label="وزن">${I('edit',18)}</button></div><div class="num2">${fa(S.weight)}</div><div class="mute">کیلوگرم</div><div class="ruler">${tick}</div><div class="row between mute" style="font-size:12px">${[-2,-1,0,1,2].map(d=>`<span>${fa(wr+d)}</span>`).join('')}</div></div>
+ </div>`}
 
-    <!-- =========================================
-         STATS / NUTRITION SCREEN
-    ========================================= -->
-    <section class="screen" data-screen="progress">
-      <div class="top-header">
-        <h1 style="font-size: 24px; margin:0; font-weight: 900;">آمار</h1>
-        <div class="pill-btn">این هفته</div>
-      </div>
+function renderWorkout(){
+ const list=MUSCLES[S.muscle]||[];
+ return hdr('<span class="tp">تمرین</span>')+`<h3 style="font-size:20px;margin:6px 4px 10px">تمرکز روی بدن</h3><div class="chips">${Object.keys(MUSCLES).map(m=>`<button class="chip ${m===S.muscle?'on':''}" data-muscle="${m}">${m}</button>`).join('')}</div>
+ <div class="stack">${list.map((e,i)=>`<div class="card"><div class="mute">یک‌روزه · بدون وسیله</div><h3 style="font-size:21px;margin:4px 0 12px">${e[0]}</h3><div class="row mute" style="gap:16px;margin-bottom:16px"><span>${fa(e[1])} ست</span><span>${fa(e[2])} تکرار</span><span>${fa(e[3])} کیلوکالری</span></div><button class="pill light" style="display:inline-flex;align-items:center;gap:8px" data-ex="${i}">${I('play',18)}شروع</button></div>`).join('')}</div>`}
 
-      <div class="stats-grid" style="margin-bottom: 20px;">
-        <div class="stat-card full">
-          <svg width="140" height="80" viewBox="0 0 100 50" style="margin-bottom: 10px;">
-            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f0f0f5" stroke-width="12" stroke-linecap="round"/>
-            <path id="calorie-arc" d="M 10 50 A 40 40 0 0 1 50 10" fill="none" stroke="#111" stroke-width="12" stroke-linecap="round"/>
-          </svg>
-          <div style="font-weight: 900; font-size: 18px;"><span id="prog-cal">2000</span> کالری دریافتی</div>
-          <div style="display: flex; gap: 20px; margin-top: 10px; font-size: 12px; color: var(--muted); font-weight: 700;">
-            <span>۲ وعده</span><span id="prog-water-txt">۱.۵ لیتر آب</span>
-          </div>
-        </div>
+function renderStats(){
+ const wd=[5,4,3,2,1,0,6],nm={0:'ی',1:'د',2:'س',3:'چ',4:'پ',5:'ج',6:'ش'},td=new Date().getDay();
+ const pts=(S.history||[]).map(h=>h.w).filter(Boolean).concat(S.weight).slice(-14);
+ let line='<p class="mute" style="text-align:center;padding:20px 0">هنوز داده‌ای ثبت نشده.</p>';
+ if(pts.length>1){const mn=Math.min(...pts),mx=Math.max(...pts),sp=(mx-mn)||1;line=`<svg viewBox="0 0 300 90" width="100%" style="position:static"><polyline fill="none" stroke="#4f7cff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${pts.map((p,i)=>(i/(pts.length-1)*290+5)+','+(80-(p-mn)/sp*70)).join(' ')}"/></svg>`}
+ const logged=(S.history||[]).slice(-6).filter(h=>h.eaten>0).length+(S.eaten>0?1:0),g=Math.PI*80,pc=Math.min(1,S.weeklyGoal?S.weekly/S.weeklyGoal:0);
+ return `<div class="top"><span class="tp">آمار</span><span class="sp"></span><span class="tp sq off">${I('chevR')}</span><span class="tp">این هفته</span><span class="tp sq off">${I('chevL')}</span></div>
+ <div style="text-align:center"><svg viewBox="0 0 180 100" width="300" style="margin:8px auto 0;position:static"><path d="M10 95A80 80 0 0 1 170 95" fill="none" stroke="#e6e7ec" stroke-width="18" stroke-linecap="round"/><path d="M10 95A80 80 0 0 1 170 95" fill="none" stroke="#14151a" stroke-width="18" stroke-linecap="round" stroke-dasharray="${g*pc} ${g}"/></svg><div class="num" style="margin-top:-62px">${fa(S.weekly)}/${fa(S.weeklyGoal)}</div><div class="mute">هدف تمرین این هفته</div></div>
+ <div class="s3"><div><b>${fa(logged)}</b><div class="mute">روز ثبت</div></div><div><b>${fa(S.foods.length)}</b><div class="mute">وعده</div></div><div><b>${fa(S.weekly)}</b><div class="mute">جلسه تمرین</div></div></div>
+ <div class="card" style="margin-bottom:12px"><h3>تعادل مواد مغذی</h3><div class="row between" style="margin-top:14px">${ring(S.p,S.pG,'#4f7cff','پروتئین')}${ring(S.c,S.cG,'#ff9b3d','کربوهیدرات')}${ring(S.f,S.fG,'#2fb67c','چربی')}</div><div class="wk">${wd.map(d=>`<div><span class="mute">${nm[d]}</span>${d===td?'<i></i>':''}</div>`).join('')}</div></div>
+ <div class="card" style="margin-bottom:12px"><h3 style="margin-bottom:8px">روند وزن</h3>${line}</div>
+ <div class="card"><h3 style="margin-bottom:6px">تمرین‌های ثبت‌شده</h3>${S.workouts.slice(-5).reverse().map(w=>`<div class="set-item"><div style="flex:1">${w.name}<div class="mute">${fa(w.sets||0)} ست × ${fa(w.reps||0)}</div></div><b>${fa(w.cal)}</b></div>`).join('')||'<p class="mute">تمرینی ثبت نشده.</p>'}</div>`}
 
-        <div class="stat-card">
-          <div style="display:flex; justify-content:space-between;">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ef4444" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
-            <span style="color:var(--gold); font-size: 18px;">✨</span>
-          </div>
-          <div class="stat-val" id="prog-burned">0</div>
-          <div class="stat-lbl">کالری سوخته</div>
-        </div>
-        
-        <div class="stat-card" onclick="addWater()">
-          <div style="display:flex; justify-content:space-between;">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg></div>
-            <span style="color:var(--gold); font-size: 18px;">✨</span>
-          </div>
-          <div class="stat-val" id="prog-water">1.5</div>
-          <div class="stat-lbl">آب (لیتر) +</div>
-        </div>
+function renderChat(){
+ return bar2('مربی گردول')+`<div class="chat" id="chatBox">${S.chat.length?S.chat.map(m=>`<div class="msg ${m.r}">${m.t.replace(/</g,'&lt;')}</div>`).join(''):`<div class="card" style="text-align:center">${mascot(90)}<p class="mute" style="margin-top:8px">مثلاً بگو: «کالری امروزمو بکن ۲۵۰۰» یا «۲ لیوان آب خوردم»</p></div>`}</div><div style="height:70px"></div>`}
 
-        <div class="stat-card">
-          <div style="display:flex; justify-content:space-between;">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div>
-          </div>
-          <div class="stat-val" id="prog-weight">57</div>
-          <div class="stat-lbl">وزن (کیلو)</div>
-          <div class="weight-slider">
-            <div class="weight-track"><span>55</span><span>56</span><span>57</span><span>58</span><span>59</span></div>
-          </div>
-        </div>
+function renderProfile(){
+ const C=2*Math.PI*40,p=S.xp%200/200;
+ return `<div class="park">${hdr(`<span class="tp">${S.name}</span>`)}<div class="mc">${mascot(190)}</div></div>
+ <div class="row between" style="margin-bottom:12px"><span class="tp"><svg width="24" height="24" viewBox="0 0 24 24" style="position:static"><circle cx="12" cy="12" r="10" fill="#f6c343"/><path d="M12 7l1.600 3.300 3.600.5-2.600 2.500.6 3.600L12 15l-3.200 1.900.6-3.600-2.600-2.500 3.600-.5z" fill="#fff"/></svg>${fa(S.xp)}</span><span class="tp"><span style="color:#ff7a3d">${I('flame',24)}</span>${fa(S.streak)}</span></div>
+ <div class="card"><div class="row between"><div><div class="mute">پروفایل</div><div class="big" style="font-size:28px;margin:6px 0">${S.name}</div></div><svg width="92" height="92" viewBox="0 0 100 100" style="position:static"><circle cx="50" cy="50" r="40" fill="none" stroke="#e9ebf2" stroke-width="8"/><circle cx="50" cy="50" r="40" fill="none" stroke="#4f7cff" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C*p} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="46" text-anchor="middle" font-size="11" fill="#8a8d99">سطح</text><text x="50" y="68" text-anchor="middle" font-size="22" font-weight="800" fill="currentColor">${fa(LV(S.xp))}</text></svg></div>
+ <div class="s3" style="margin-bottom:0"><div><b>${fa(S.xp%200)}</b><div class="mute">XP از ۲۰۰</div></div><div><b>${fa(S.weekly)}</b><div class="mute">تمرین هفته</div></div><div><b>${fa(S.streak)}</b><div class="mute">پیوستگی</div></div></div></div>`}
 
-        <div class="stat-card">
-          <div style="display:flex; justify-content:space-between;">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-          </div>
-          <div class="stat-val">غیرفعال</div>
-          <div class="stat-lbl">فستینگ</div>
-        </div>
-      </div>
+function renderSettings(){
+ const R=(c,i,t,v,a)=>`<button class="set-item" style="width:100%;text-align:right" data-act="${a}"><span style="color:${c}">${I(i,24)}</span><span style="flex:1">${t}</span><span class="mute">${v}</span><span class="mute">${I('chevL',18)}</span></button>`;
+ const Sec=(t,r)=>`<div class="card" style="margin-bottom:12px"><h3 style="font-size:20px;margin-bottom:6px">${t}</h3>${r}</div>`;
+ const N='ثبت نشده';
+ return bar2('تنظیمات')+
+ Sec('ظاهر اپ',`<button class="set-item" style="width:100%;text-align:right" data-act="dark"><span style="color:#9a5cf5">${I('target',24)}</span><span style="flex:1">حالت تاریک</span><span class="sw ${S.dark?'on':''}"><i></i></span></button>`)+
+ Sec('بدن من',R('#1e88e5','user','جنسیت',S.sex||N,'sex')+R('#c0553a','cal','سن',S.age?fa(S.age)+' سال':N,'age')+R('#1fa37a','target','قد',S.height?fa(S.height)+' سانتی‌متر':N,'height')+R('#9a5cf5','stats','وزن فعلی',fa(S.weight)+' کیلوگرم','weight'))+
+ Sec('هدف‌ها',R('#ff8a4f','flame','کالری روزانه',fa(S.goal)+' کیلوکالری','goal')+R('#1e88e5','drop','آب',fa(S.waterGoal)+' میلی‌لیتر','wgoal')+R('#1fa37a','target','قدم روزانه',fa(S.steps),'steps')+R('#9a5cf5','trophy','تمرین هفتگی',fa(S.weeklyGoal)+' جلسه','wk'))+
+ Sec('مربی هوشمند',R('#4f7cff','key','کلید API جمینای',getKey()?'ذخیره شده':'وارد نشده','key')+R('#e0526b','speaker','خواندن پاسخ با صدا',localStorage.tts==='0'?'خاموش':'روشن','tts'))+
+ Sec('حساب',R('#1e88e5','user','نام گردولک',S.name,'name')+R('#4f7cff','play','آموزش اپ','','tour')+R('#8a8d99','check','نسخهٔ اپ','۲٫۰٫۰','none')+R('#d9472b','trash','پاک‌کردن همه داده‌ها','','reset'))}
 
-      <div class="section-header"><div class="section-title">تعادل مواد مغذی (پلاس)</div></div>
-      <div class="ring-container">
-        <div class="ring-box"><div class="ring-circle">۰٪</div><span>پروتئین</span></div>
-        <div class="ring-box"><div class="ring-circle">۰٪</div><span>کربوهیدرات</span></div>
-        <div class="ring-box"><div class="ring-circle">۰٪</div><span>چربی</span></div>
-        <div class="ring-box"><div class="ring-circle">۰٪</div><span>فیبر</span></div>
-      </div>
-    </section>
+const PAGES={food:renderFood,workout:renderWorkout,stats:renderStats,profile:renderProfile,chat:renderChat,settings:renderSettings};
+function render(){
+ document.body.classList.toggle('dark',!!S.dark);
+ $('#app').innerHTML=PAGES[page]();
+ $('#composer').style.display=page==='chat'?'flex':'none';
+ const tabs=[['workout','dumbbell'],['food','bowl'],['profile','user'],['stats','stats']];
+ $('#nav').innerHTML=tabs.map(([k,i])=>`<button class="${page===k?'on':''}" data-nav="${k}" aria-label="${k}">${I(i)}</button>`).join('');
+ $('#fab').innerHTML=I('plus',30);
+ $('#nav').style.display=$('#fab').style.display=page==='settings'?'none':'';
+ document.querySelectorAll('[data-i]').forEach(e=>e.innerHTML=I(e.dataset.i,22));
+ $('#shRem').textContent=fa(Math.max(0,S.goal-S.eaten+S.burned))+' کالری باقی‌مانده';
+ $('#micBtn').innerHTML=I('mic',20);$('#sendBtn').innerHTML=I('send',20);
+ if(page==='chat')scrollTo(0,document.body.scrollHeight);
+}
 
-    <!-- =========================================
-         COACH / AI SCREEN
-    ========================================= -->
-    <section class="screen chat-screen" data-screen="coach" style="padding-bottom: 140px;">
-      <div class="top-header">
-        <h1 style="font-size: 24px; margin:0; font-weight: 900;">مربی هوشمند</h1>
-        <button class="pill-btn" onclick="switchTab('home')">بازگشت</button>
-      </div>
-      
-      <div class="chat-container" id="chat-box">
-        <div class="bubble ai">سلام! من مغز متفکر برنامه‌ام. هر دستوری بدی اجرا می‌کنم. می‌تونی ویدیو بفرستی، حرف بزنی یا بگی «کالری امروزمو بکن ۲۵۰۰».</div>
-      </div>
-      
-      <div class="chat-input-area">
-        <label class="icon-btn" for="media-upload">
-          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-        </label>
-        <input type="file" id="media-upload" accept="video/*,image/*" style="display: none;">
-        
-        <input type="text" id="chat-input" placeholder="پیامت رو بنویس..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        
-        <button class="icon-btn" id="mic-btn" onclick="toggleMic()">
-          <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-        </button>
-        
-        <button class="icon-btn btn-send" onclick="sendMessage()">
-          <svg viewBox="0 0 24 24" style="transform: rotate(180deg);"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        </button>
-      </div>
-    </section>
+/* ---------- Guided tour ---------- */
+const TOUR=[['کالری امروز','اینجا می‌بینی امروز چقدر خوردی و چقدر برات مونده.'],['برنامهٔ غذایی','غذاهایی که امروز ثبت می‌کنی همین‌جا جمع می‌شن.'],['ثبت سریع','با دکمهٔ + تمرین، غذا یا عکس غذا رو ثبت کن.'],['تمرین','هر روز یه تمرین کوتاه اینجا منتظرته.'],['آمار','هفته‌ت چطور گذشت؟ نمودارها اینجان.'],['پروفایل','گردولکِ تو اینجاست و سطحت رو می‌بینی.'],['مربی','هر سؤالی داشتی از بالای صفحه بپرس.']];
+function tour(i){
+ const el=$('#tour');if(i>=TOUR.length){el.classList.remove('show');S.toured=true;save();return}
+ const t=TOUR[i],s=i%2?'l':'r';page='food';render();
+ el.innerHTML=`<div class="bub ${s}"><div class="dots">${TOUR.map((_,j)=>`<i class="${j===i?'on':''}"></i>`).join('')}</div><h3>${t[0]}</h3><p>${t[1]}</p><div class="row between"><button style="color:#777" id="tSkip">رد کردن</button><button class="pill blue" id="tNext">بعدی</button></div></div><div class="tm ${s}">${mascot(150)}</div>`;
+ el.classList.add('show');$('#tNext').onclick=()=>tour(i+1);$('#tSkip').onclick=()=>tour(99);
+}
 
-    <!-- =========================================
-         PROFILE / SETTINGS SCREEN
-    ========================================= -->
-    <section class="screen" data-screen="profile">
-      <div class="top-header">
-        <button class="pill-icon" onclick="switchTab('home')">
-          <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-        </button>
-        <h1 style="font-size: 20px; margin:0; font-weight: 900;">تنظیمات</h1>
-        <div style="width: 44px;"></div>
-      </div>
+/* ---------- Tools (God Mode) ---------- */
+const TOOLS={
+ set_calories({goal,eaten,burned}){if(goal!=null)S.goal=+goal;if(eaten!=null)S.eaten=+eaten;if(burned!=null)S.burned=+burned;return{ok:true,goal:S.goal,eaten:S.eaten,burned:S.burned}},
+ set_water({ml,add}){S.water=Math.max(0,add?S.water+ +ml:+ml);return{ok:true,water:S.water}},
+ set_weight({kg}){S.weight=+kg;return{ok:true,weight:S.weight}},
+ log_food({name,calories,protein=0,carbs=0,fat=0}){S.foods.push({name,cal:+calories,p:+protein,c:+carbs,f:+fat});S.eaten+=+calories;S.p+=+protein;S.c+=+carbs;S.f+=+fat;touchStreak();return{ok:true,eaten:S.eaten}},
+ log_workout({name,sets=0,reps=0,calories_burned=0}){S.workouts.push({name,sets:+sets,reps:+reps,cal:+calories_burned,d:today()});S.burned+=+calories_burned;S.weekly++;S.xp+=50;touchStreak();return{ok:true,burned:S.burned}}
+};
+const N=(d)=>({type:'NUMBER',description:d});
+const DECL=[
+ {name:'set_calories',description:'تغییر کالری: goal=هدف روزانه، eaten=کالری مصرف‌شده، burned=کالری سوخته',parameters:{type:'OBJECT',properties:{goal:N('هدف'),eaten:N('مصرفی'),burned:N('سوخته')}}},
+ {name:'set_water',description:'تنظیم آب (میلی‌لیتر). اگر add=true به مقدار فعلی اضافه شود',parameters:{type:'OBJECT',properties:{ml:N('مقدار'),add:{type:'BOOLEAN'}},required:['ml']}},
+ {name:'set_weight',description:'تنظیم وزن (کیلوگرم)',parameters:{type:'OBJECT',properties:{kg:N('وزن')},required:['kg']}},
+ {name:'log_food',description:'ثبت غذا با ماکروها',parameters:{type:'OBJECT',properties:{name:{type:'STRING'},calories:N('کالری'),protein:N('گرم'),carbs:N('گرم'),fat:N('گرم')},required:['name','calories']}},
+ {name:'log_workout',description:'ثبت تمرین و کالری سوخته',parameters:{type:'OBJECT',properties:{name:{type:'STRING'},sets:N('ست'),reps:N('تکرار'),calories_burned:N('کالری سوخته')},required:['name','calories_burned']}}
+];
+const SYS=()=>`تو مربی ورزشی و تغذیه شخصی کاربر هستی و فارسی کوتاه و دقیق جواب می‌دهی. عددی از خودت درنیاور؛ برای تغییر داده‌ها حتماً از ابزارها استفاده کن. وضعیت فعلی: ${JSON.stringify({goal:S.goal,eaten:S.eaten,burned:S.burned,water:S.water,weight:S.weight,p:S.p,c:S.c,f:S.f,streak:S.streak})}`;
 
-      <div class="profile-header-card">
-        <div class="mascot-hero" style="width: 120px; height: 120px;"></div>
-        <div style="font-size: 24px; font-weight: 900;">Leo</div>
-        <div style="color: var(--muted); font-size: 13px; margin-top: 4px; font-weight: 600;">@Leo · عضو از آبان ۱,۴۰۵</div>
-        <div class="level-badge">سطح ۱ · ۰ از ۱۰۰ XP</div>
-      </div>
+/* ---------- Gemini ---------- */
+async function gemini(contents){
+ const k=getKey();if(!k)throw new Error('ابتدا کلید API را در پروفایل وارد کن.');
+ const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},
+  body:JSON.stringify({systemInstruction:{parts:[{text:SYS()}]},contents,tools:[{functionDeclarations:DECL}],generationConfig:{temperature:0.1}})});
+ const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'خطای شبکه');return j.candidates?.[0]?.content||{parts:[{text:'پاسخی دریافت نشد.'}]};
+}
+async function ask(userParts,label){
+ if(busy)return;busy=true;S.chat.push({r:'u',t:label});page='chat';render();
+ const hist=S.chat.slice(-12,-1).filter(m=>m.r!=='t').map(m=>({role:m.r==='u'?'user':'model',parts:[{text:m.t}]}));
+ let contents=[...hist,{role:'user',parts:userParts}];
+ try{
+  for(let i=0;i<5;i++){
+   const out=await gemini(contents);contents.push(out);
+   const calls=(out.parts||[]).filter(p=>p.functionCall);
+   if(!calls.length){const t=(out.parts||[]).map(p=>p.text||'').join('').trim();S.chat.push({r:'a',t});speak(t);break}
+   const res=calls.map(c=>{let r;try{r=TOOLS[c.functionCall.name](c.functionCall.args||{})}catch(e){r={error:String(e)}}
+    S.chat.push({r:'t',t:'اجرا شد: '+c.functionCall.name});return{functionResponse:{name:c.functionCall.name,response:r}}});
+   contents.push({role:'user',parts:res});
+  }
+ }catch(e){S.chat.push({r:'a',t:'خطا: '+e.message})}
+ busy=false;save();render();
+}
+const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f)});
+async function sendMedia(file,prompt,label){
+ if(file.size>18*1024*1024){toast('حجم فایل بیش از ۱۸ مگابایت است؛ کوتاه‌تر یا فشرده‌تر کن.');return}
+ toast('در حال آماده‌سازی فایل...');
+ ask([{inlineData:{mimeType:file.type,data:await b64(file)}},{text:prompt}],label);
+}
+$('#vidIn').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)sendMedia(f,'این ویدیوی تمرین است. حرکت را تشخیص بده، ست و تکرار را بشمار، کالری سوخته را تخمین بزن و سپس حتماً با ابزار log_workout ثبتش کن.','ویدیوی تمرین ارسال شد')};
+$('#imgIn').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)sendMedia(f,'این عکس غذاست. غذا و مقدار را تشخیص بده، کالری و ماکروها را تخمین بزن و با log_food ثبت کن.','عکس غذا ارسال شد')};
 
-      <div class="settings-group">
-        <div class="settings-item" onclick="promptApiKey()">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#eff6ff;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            </div>
-            کلید Gemini API
-          </div>
-          <div class="settings-item-right">
-            <span id="key-status">تنظیم نشده</span>
-          </div>
-        </div>
-        <div class="settings-item">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#f3e8ff;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#a855f7"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-            </div>
-            حالت تاریک
-          </div>
-          <div class="settings-item-right"><button class="switch" onclick="this.classList.toggle('on')"></button></div>
-        </div>
-      </div>
+/* ---------- Voice ---------- */
+function speak(t){if(localStorage.tts==='0'||!('speechSynthesis' in window)||!t)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='fa-IR';speechSynthesis.speak(u)}
+let rec;
+$('#micBtn').onclick=()=>{
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){toast('مرورگر از تشخیص گفتار پشتیبانی نمی‌کند.');return}
+ if(rec){rec.stop();return}
+ rec=new SR();rec.lang='fa-IR';rec.interimResults=false;$('#micBtn').classList.add('rec');
+ rec.onresult=e=>{const t=e.results[0][0].transcript;ask([{text:t}],t)};
+ rec.onend=()=>{rec=null;$('#micBtn').classList.remove('rec')};rec.onerror=()=>toast('خطا در تشخیص گفتار');rec.start();
+};
+const sendText=()=>{const i=$('#chatIn'),t=i.value.trim();if(t){i.value='';ask([{text:t}],t)}};
+$('#sendBtn').onclick=sendText;$('#chatIn').onkeydown=e=>{if(e.key==='Enter')sendText()};
 
-      <div class="settings-group">
-        <div class="settings-item">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#fee2e2;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#ef4444"><path d="M12 20V10M18 20V4M6 20v-4"></path></svg>
-            </div>
-            نوع رژیم
-          </div>
-          <div class="settings-item-right">متعادل</div>
-        </div>
-        <div class="settings-item">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#fef3c7;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
-            </div>
-            حساسیت‌ها
-          </div>
-          <div class="settings-item-right">هیچ‌کدام</div>
-        </div>
-        <div class="settings-item">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#f0fdf4;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#10b981"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path></svg>
-            </div>
-            سطح تمرین
-          </div>
-          <div class="settings-item-right">حرفه‌ای</div>
-        </div>
-      </div>
+/* ---------- Workout player ---------- */
+let pl=null;
+function openPlayer(i){const e=MUSCLES[S.muscle][i];pl={name:e[0],sets:e[1],reps:e[2],kcal:e[3],set:1,rest:0,t:null,done:0};drawPlayer()}
+function drawPlayer(){
+ const p=pl,el=$('#player');el.classList.add('show');
+ const dots=`<div class="set-dots">${Array.from({length:p.sets},(_,i)=>`<i class="${i<p.set?'on':''}"></i>`).join('')}</div>`;
+ if(p.fin){el.innerHTML=`<div></div><div>${mascot(120)}<h1 style="margin-top:12px">آفرین!</h1><p class="mute" style="color:#aaa">${fa(p.done)} کیلوکالری سوزاندی</p></div><button class="btn" id="plSave">ثبت و خروج</button>`;$('#plSave').onclick=()=>{TOOLS.log_workout({name:p.name,sets:p.sets,reps:p.reps,calories_burned:p.done});save();closePlayer();toast('تمرین ثبت شد');render()};return}
+ if(p.rest>0){el.innerHTML=`<button data-x style="align-self:flex-start;color:#aaa">${I('x')}</button><div><p style="color:#aaa">استراحت</p><div class="timer">${fa(p.rest)}</div>${dots}</div><button class="btn" id="plSkip">رد کردن استراحت</button>`;
+  $('#plSkip').onclick=()=>{clearInterval(p.t);p.rest=0;drawPlayer()}}
+ else{el.innerHTML=`<button data-x style="align-self:flex-start;color:#aaa">${I('x')}</button><div><p style="color:#aaa">${p.name}</p><div class="timer" style="font-size:64px">ست ${fa(p.set)} از ${fa(p.sets)}</div><p style="margin:12px 0 18px;color:#ccc">${fa(p.reps)} تکرار</p>${dots}</div><button class="btn" id="plDone">ست تمام شد</button>`;
+  $('#plDone').onclick=()=>{p.done+=Math.round(p.kcal/p.sets*10)/10;if(p.set>=p.sets){p.done=Math.round(p.done);p.fin=true;drawPlayer();return}
+   p.set++;p.rest=30;drawPlayer();p.t=setInterval(()=>{p.rest--;if(p.rest<=0){clearInterval(p.t);p.rest=0;navigator.vibrate&&navigator.vibrate(200)}drawPlayer()},1000)}}
+ const x=el.querySelector('[data-x]');if(x)x.onclick=closePlayer;
+}
+function closePlayer(){if(pl)clearInterval(pl.t);pl=null;$('#player').classList.remove('show')}
 
-      <div class="settings-group">
-        <div class="settings-item">
-          <div class="settings-item-left">
-            <div class="settings-icon" style="background:#e0e7ff;">
-              <svg viewBox="0 0 24 24" fill="none" stroke="#6366f1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            </div>
-            حساب و پشتیبانی
-          </div>
-          <div class="settings-item-right">Leo</div>
-        </div>
-      </div>
-    </section>
-  </main>
+/* ---------- Forms & sheet ---------- */
+const sheet=o=>{$('#sheet').classList.toggle('show',o);$('#ov').classList.toggle('show',o)};
+function form(title,fields,cb){
+ $('#formBox').innerHTML=`<h3>${title}</h3>${fields.map(f=>`<input type="${f[2]||'text'}" id="f_${f[0]}" placeholder="${f[1]}" style="direction:rtl;text-align:right">`).join('')}<div class="row"><button class="pill" id="fOk">ثبت</button><button class="pill light" id="fNo">انصراف</button></div>`;
+ $('#formModal').classList.add('show');
+ $('#fNo').onclick=()=>$('#formModal').classList.remove('show');
+ $('#fOk').onclick=()=>{const v={};fields.forEach(f=>v[f[0]]=$('#f_'+f[0]).value);$('#formModal').classList.remove('show');cb(v);save();render()};
+}
+const num=(t,k,l)=>form(t,[['v',l,'number']],v=>{if(v.v!=='')S[k]=+v.v});
 
-  <!-- =========================================
-       BOTTOM NAVIGATION
-  ========================================= -->
-  <div class="nav-wrapper">
-    <nav class="nav-bar">
-      <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress">
-        <svg viewBox="0 0 24 24"><rect x="18" y="3" width="4" height="18" rx="1"></rect><rect x="10" y="8" width="4" height="13" rx="1"></rect><rect x="2" y="13" width="4" height="8" rx="1"></rect></svg>
-      </button>
-      <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile">
-        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      </button>
-      <button class="nav-plus" onclick="openPlusModal()">
-        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
-      </button>
-      <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach">
-        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-      </button>
-      <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
-        <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"></path></svg>
-      </button>
-    </nav>
-  </div>
+/* ---------- Events ---------- */
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button,.overlay');if(!t)return;
+ if(t.id==='ov'){sheet(false);return}
+ const d=t.dataset;
+ if(d.nav){if(d.nav==='plus')sheet(!$('#sheet').classList.contains('show'));else{page=d.nav;render();scrollTo(0,0)}return}
+ if(d.muscle){S.muscle=d.muscle;render();return}
+ if(d.ex!==undefined){openPlayer(+d.ex);return}
+ if(d.water){S.water=Math.max(0,S.water+ +d.water);save();render();return}
+ const a=d.act;if(!a)return;
+ if(a==='start'){page='workout';render()}
+ else if(a==='fast'){S.fastStart=S.fastStart?null:Date.now();save();render()}
+ else if(a==='dark'){S.dark=!S.dark;save();render()}
+ else if(a==='sex')fld('جنسیت','sex','پسر یا دختر','text');
+ else if(a==='age')fld('سن','age','سال');
+ else if(a==='height')fld('قد','height','سانتی‌متر');
+ else if(a==='weight')fld('وزن فعلی','weight','کیلوگرم');
+ else if(a==='steps')fld('هدف قدم روزانه','steps','تعداد قدم');
+ else if(a==='name')fld('نام گردولک','name','نام','text');
+ else if(a==='tour')tour(0);
+ else if(a==='food-text'){sheet(false);form('توضیح غذا',[['t','مثلاً: دو تخم‌مرغ و یک نان سنگک']],v=>{if(v.t)ask([{text:'این غذا را ثبت کن: '+v.t+' . کالری و ماکروها را تخمین بزن و با log_food ثبت کن.'}],v.t)})}
+ else if(a==='key'){$('#keyIn').value=getKey();$('#keyModal').classList.add('show')}
+ else if(a==='goal')num('هدف کالری','goal','کیلوکالری در روز');
+ else if(a==='wgoal')num('هدف آب','waterGoal','میلی‌لیتر در روز');
+ else if(a==='wk')num('هدف هفتگی','weeklyGoal','تعداد تمرین در هفته');
+ else if(a==='tts'){localStorage.tts=localStorage.tts==='0'?'1':'0';render()}
+ else if(a==='reset'){if(confirm('همه داده‌ها پاک شود؟ کلید API حفظ می‌شود.')){localStorage.removeItem(KEY);location.reload()}}
+ else if(a==='log-workout'){sheet(false);form('ثبت تمرین',[['n','نام حرکت'],['s','ست','number'],['r','تکرار','number'],['c','کالری سوخته','number']],v=>{TOOLS.log_workout({name:v.n||'تمرین',sets:v.s,reps:v.r,calories_burned:v.c||0});toast('تمرین ثبت شد')})}
+ else if(a==='log-food'){sheet(false);form('ثبت غذا',[['n','نام غذا'],['c','کالری','number'],['p','پروتئین (گرم)','number'],['k','کربوهیدرات (گرم)','number'],['f','چربی (گرم)','number']],v=>{TOOLS.log_food({name:v.n||'غذا',calories:v.c||0,protein:v.p||0,carbs:v.k||0,fat:v.f||0});toast('غذا ثبت شد')})}
+ else if(a==='food-photo'){sheet(false);$('#imgIn').click()}
+ else if(a==='video'){sheet(false);$('#vidIn').click()}
+});
+$('#keySave').onclick=()=>{localStorage.setItem('gemini_api_key',$('#keyIn').value.trim());$('#keyModal').classList.remove('show');toast('کلید ذخیره شد')};
+$('#keyClose').onclick=()=>$('#keyModal').classList.remove('show');
+setInterval(()=>{if(page==='food'&&S.fastStart&&!document.activeElement?.matches('input'))render()},60000);
+render();
 
-  <!-- =========================================
-       PLUS MODAL (BLACK SHEET)
-  ========================================= -->
-  <div class="modal-overlay" id="plus-modal" onclick="closePlusModal(event)">
-    <div class="modal-content" onclick="event.stopPropagation()">
-      <div class="modal-handle"></div>
-      
-      <div class="sheet-item" onclick="addWorkoutLog('تمرین جدید')">
-        <div class="sheet-icon"><svg viewBox="0 0 24 24"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path></svg></div>
-        <div class="sheet-text"><h4>تمرین</h4><p>یک جلسه تمرین جدید ثبت کن</p></div>
-      </div>
-      
-      <div class="sheet-item" onclick="addFoodCamera()">
-        <div class="sheet-icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg></div>
-        <div class="sheet-text"><h4>ثبت با عکس</h4><p>از غذات عکس بگیر</p></div>
-      </div>
-      
-      <div class="sheet-item" onclick="addFoodText()">
-        <div class="sheet-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
-        <div class="sheet-text"><h4>توضیح غذا</h4><p>بنویس چی خوردی</p></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- =========================================
-       API MODAL
-  ========================================= -->
-  <div class="modal-overlay" id="api-modal" onclick="closeApiModal(event)">
-    <div class="modal-content api-modal" onclick="event.stopPropagation()">
-      <div class="modal-handle"></div>
-      <h3 style="margin-top: 0; font-size: 20px; font-weight: 900;">کلید Gemini API</h3>
-      <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">کلید API را وارد کنید. این کلید فقط روی گوشی شما ذخیره می‌شود.</p>
-      <input type="password" id="api-key-input" placeholder="AQ.Ab8...">
-      <button class="btn-black" onclick="saveApiKey()">ذخیره کلید</button>
-      <button style="width: 100%; background: none; border: none; color: var(--muted); margin-top: 16px; font-weight: 700; font-family: inherit;" onclick="closeApiModal()">انصراف</button>
-    </div>
-  </div>
-
-  <script>
-    // =========================================
-    // STATE MANAGEMENT
-    // =========================================
-    let state = JSON.parse(localStorage.getItem('gravlState')) || {
-      apiKey: '', calories: 2000, water: 1.5, caloriesBurned: 0, workouts: [] 
-    };
-
-    function saveState() {
-      localStorage.setItem('gravlState', JSON.stringify(state));
-      updateUI();
-    }
-
-    function updateUI() {
-      document.getElementById('prog-cal').innerText = state.calories;
-      document.getElementById('prog-water').innerText = state.water;
-      document.getElementById('prog-water-txt').innerText = state.water + ' لیتر آب';
-      document.getElementById('prog-burned').innerText = state.caloriesBurned;
-      
-      let keyStatus = document.getElementById('key-status');
-      if(state.apiKey) {
-        keyStatus.innerText = "✅ ذخیره شده";
-        keyStatus.style.color = "var(--blue)";
-      }
-    }
-
-    function switchTab(tabName) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector(`[data-screen="${tabName}"]`).classList.add('active');
-      let activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-      if(activeBtn) activeBtn.classList.add('active');
-      if(tabName === 'coach') document.getElementById('chat-box').scrollTop = 9999;
-    }
-
-    function selectCat(btn) {
-      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
-    // =========================================
-    // PLUS MODAL & ACTIONS
-    // =========================================
-    function openPlusModal() { document.getElementById('plus-modal').classList.add('show'); }
-    function closePlusModal(e) { if(e && e.target !== e.currentTarget) return; document.getElementById('plus-modal').classList.remove('show'); }
-
-    function addWorkoutLog(name) {
-      closePlusModal();
-      state.workouts.push({ name: name });
-      state.caloriesBurned += 150;
-      saveState();
-      alert("✅ " + name + " ثبت شد و ۱۵۰ کالری به کالری سوخته اضافه شد.");
-      switchTab('progress');
-    }
-
-    function addWater() {
-      state.water += 0.25;
-      saveState();
-      alert("💧 یک لیوان آب (۰.۲۵ لیتر) اضافه شد.");
-    }
-
-    function addFoodText() {
-      closePlusModal();
-      let food = prompt("چی خوردی؟", "یک سیب");
-      if(!food) return;
-      state.calories += 100;
-      saveState();
-      alert("🍎 غذا ثبت شد و ۱۰۰ کالری به کالری دریافتی اضافه شد.");
-    }
-    
-    function addFoodCamera() {
-       closePlusModal();
-       alert("دوربین در نسخه نهایی فعال می‌شود.");
-    }
-
-    // =========================================
-    // API KEY SETTINGS
-    // =========================================
-    function promptApiKey() {
-      if(state.apiKey) document.getElementById('api-key-input').value = state.apiKey;
-      document.getElementById('api-modal').classList.add('show');
-    }
-    function closeApiModal(e) {
-      if(e && e.target !== e.currentTarget) return;
-      document.getElementById('api-modal').classList.remove('show');
-    }
-    function saveApiKey() {
-      let key = document.getElementById('api-key-input').value.trim();
-      if(key.length > 10) {
-        state.apiKey = key;
-        saveState();
-        alert('کلید ذخیره شد!');
-        closeApiModal();
-      } else { alert('کلید نامعتبر است.'); }
-    }
-
-    // =========================================
-    // AI BRAIN & VISION & SPEECH
-    // =========================================
-    function addMessage(text, sender) {
-      let box = document.getElementById('chat-box');
-      let div = document.createElement('div');
-      div.className = `bubble ${sender}`;
-      div.innerText = text;
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
-      return div;
-    }
-
-    async function sendMessage() {
-      let input = document.getElementById('chat-input');
-      let text = input.value.trim();
-      if(!text) return;
-      if(!state.apiKey) { alert('کلید API تنظیم نشده است!'); switchTab('profile'); return; }
-      
-      input.value = '';
-      addMessage(text, 'user');
-      let loadingMsg = addMessage('⏳ در حال پردازش...', 'ai');
-
-      try {
-        let reply = await callGemini(text);
-        loadingMsg.innerText = reply;
-        speak(reply);
-      } catch(e) {
-        loadingMsg.innerText = "❌ خطا: " + e.message;
-      }
-    }
-
-    async function callGemini(userText, mediaParts = null) {
-      const systemPrompt = `تو یک مربی بدنسازی هستی. تو دسترسی کامل به سیستم داری. 
-      اگر کاربر خواست چیزی رو تغییر بده، حتماً از ابزارها (Tools) استفاده کن.
-      وضعیت: کالری=${state.calories}, کالری سوخته=${state.caloriesBurned}, آب=${state.water}.`;
-      
-      let contents = mediaParts ? [{ role: "user", parts: mediaParts }] : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام: " + userText }] }];
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.apiKey}`;
-
-      let tools = [{
-        functionDeclarations: [
-          { name: "update_calories", description: "تغییر کالری", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
-          { name: "update_water", description: "تغییر آب", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } }
-        ]
-      }];
-
-      try {
-        let res = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents, tools, generationConfig: { temperature: 0.1 } })
-        });
-        let data = await res.json();
-        if(data.error) throw new Error(data.error.message);
-
-        let part = data.candidates[0].content.parts[0];
-
-        if(part.functionCall) {
-          let fn = part.functionCall;
-          let resultText = "";
-          if(fn.name === "update_calories") { state.calories = fn.args.amount; saveState(); resultText = "کالری آپدیت شد."; } 
-          if(fn.name === "update_water") { state.water = fn.args.amount; saveState(); resultText = "آب آپدیت شد."; }
-          
-          let res2 = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [...contents, { role: "model", parts: [{ functionCall: fn }] }, { role: "user", parts: [{ functionResponse: { name: fn.name, response: { result: resultText } } }] }],
-              tools: tools, generationConfig: { temperature: 0.1 }
-            })
-          });
-          let data2 = await res2.json();
-          return data2.candidates[0].content.parts[0].text;
-        }
-        return part.text || "متوجه نشدم.";
-      } catch (err) {
-        if (err.message.includes('Failed to fetch')) throw new Error("فیلترشکن (VPN) خود را روشن کنید.");
-        throw err;
-      }
-    }
-
-    document.getElementById('media-upload').addEventListener('change', (e) => {
-      let file = e.target.files[0];
-      if(!file || !state.apiKey) return;
-      addMessage('📎 فایل ارسال شد', 'user');
-      let loading = addMessage('⏳ در حال تحلیل...', 'ai');
-      let reader = new FileReader();
-      reader.onload = async () => {
-        let base64 = reader.result.split(',')[1];
-        let prompt = `این ویدیو رو تحلیل کن. بگو چه حرکتیه، چند ست و تکرار، و چقدر کالری سوزونده.`;
-        let mediaParts = [{ inlineData: { mimeType: file.type, data: base64 } }, { text: prompt }];
-        try {
-          let reply = await callGemini("", mediaParts);
-          loading.innerText = reply;
-          speak(reply);
-        } catch(err) { loading.innerText = "❌ خطا: " + err.message; }
-        e.target.value = ''; 
-      };
-      reader.readAsDataURL(file);
-    });
-
-    function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      let u = new SpeechSynthesisUtterance(text);
-      u.lang = 'fa-IR';
-      window.speechSynthesis.speak(u);
-    }
-
-    let isRecording = false, recognition;
-    function toggleMic() {
-      if(!('webkitSpeechRecognition' in window)) return alert('مرورگر پشتیبانی نمی‌کند.');
-      let btn = document.getElementById('mic-btn');
-      if(isRecording) { recognition.stop(); isRecording = false; btn.classList.remove('recording'); return; }
-      recognition = new webkitSpeechRecognition();
-      recognition.lang = 'fa-IR'; 
-      recognition.onstart = () => { isRecording = true; btn.classList.add('recording'); };
-      recognition.onresult = (event) => { document.getElementById('chat-input').value = event.results[0][0].transcript; sendMessage(); };
-      recognition.onend = () => { isRecording = false; btn.classList.remove('recording'); };
-      recognition.start();
-    }
-
-    updateUI();
-  </script>
+/* ---------- Gravl 2 launch: splash + offline ---------- */
+(function(){
+ const sp=document.createElement('div');sp.id='splash';
+ sp.innerHTML=`<div>${mascot(140)}<h1 style="margin-top:14px">Gravl 2</h1></div>`;document.body.appendChild(sp);
+ setTimeout(()=>sp.classList.add('hide'),1100);setTimeout(()=>sp.remove(),1700);
+ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+if(!S.toured)setTimeout(()=>tour(0),1900);
+</script>
 </body>
-  </html>
+</html>
