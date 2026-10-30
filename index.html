@@ -206,7 +206,7 @@ if(S.date!==today()){S.history=(S.history||[]).concat([{d:S.date,eaten:S.eaten,b
  Object.assign(S,{date:today(),eaten:0,burned:0,water:0,p:0,c:0,f:0,foods:[]})}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const getKey=()=>localStorage.getItem('gemini_api_key')||'';
-const MODEL='gemini-3.8-flash';
+const modelName=()=>localStorage.getItem('gemini_model')||'gemini-3.8-flash';
 let page='food',busy=false;
 
 /* ---------- Data ---------- */
@@ -271,7 +271,7 @@ function renderStats(){
  <div class="card"><h3 style="margin-bottom:6px">تمرین‌های ثبت‌شده</h3>${S.workouts.slice(-5).reverse().map(w=>`<div class="set-item"><div style="flex:1">${w.name}<div class="mute">${fa(w.sets||0)} ست × ${fa(w.reps||0)}</div></div><b>${fa(w.cal)}</b></div>`).join('')||'<p class="mute">تمرینی ثبت نشده.</p>'}</div>`}
 
 function renderChat(){
- return bar2('مربی گردول')+`<div class="chat" id="chatBox">${S.chat.length?S.chat.map(m=>`<div class="msg ${m.r}">${m.t.replace(/</g,'&lt;')}</div>`).join(''):`<div class="card" style="text-align:center">${mascot(90)}<p class="mute" style="margin-top:8px">مثلاً بگو: «کالری امروزمو بکن ۲۵۰۰» یا «۲ لیوان آب خوردم»</p></div>`}</div><div style="height:70px"></div>`}
+ return bar2('مربی گردول')+`<div class="chat" id="chatBox">${S.chat.length?S.chat.map(m=>`<div class="msg ${m.r}">${m.t.replace(/</g,'&lt;')}</div>`).join(''):`<div class="card" style="text-align:center">${mascot(90)}<p class="mute" style="margin-top:8px">مثلاً بگو: «کالری امروزمو بکن ۲۵۰۰» یا «۲ لیوان آب خوردم»</p></div>`}${busy?'<div class="msg a typing">مربی در حال فکر کردن...</div>':''}</div><div style="height:70px"></div>`}
 
 function renderProfile(){
  const C=2*Math.PI*40,p=S.xp%200/200;
@@ -288,7 +288,7 @@ function renderSettings(){
  Sec('ظاهر اپ',`<button class="set-item" style="width:100%;text-align:right" data-act="dark"><span style="color:#9a5cf5">${I('target',24)}</span><span style="flex:1">حالت تاریک</span><span class="sw ${S.dark?'on':''}"><i></i></span></button>`)+
  Sec('بدن من',R('#1e88e5','user','جنسیت',S.sex||N,'sex')+R('#c0553a','cal','سن',S.age?fa(S.age)+' سال':N,'age')+R('#1fa37a','target','قد',S.height?fa(S.height)+' سانتی‌متر':N,'height')+R('#9a5cf5','stats','وزن فعلی',fa(S.weight)+' کیلوگرم','weight'))+
  Sec('هدف‌ها',R('#ff8a4f','flame','کالری روزانه',fa(S.goal)+' کیلوکالری','goal')+R('#1e88e5','drop','آب',fa(S.waterGoal)+' میلی‌لیتر','wgoal')+R('#1fa37a','target','قدم روزانه',fa(S.steps),'steps')+R('#9a5cf5','trophy','تمرین هفتگی',fa(S.weeklyGoal)+' جلسه','wk'))+
- Sec('مربی هوشمند',R('#4f7cff','key','کلید API جمینای',getKey()?'ذخیره شده':'وارد نشده','key')+R('#e0526b','speaker','خواندن پاسخ با صدا',localStorage.tts==='0'?'خاموش':'روشن','tts'))+
+ Sec('مربی هوشمند',R('#4f7cff','key','کلید API جمینای',getKey()?'ذخیره شده':'وارد نشده','key')+R('#4f7cff','chat','مدل هوش مصنوعی',modelName(),'model')+R('#e0526b','speaker','خواندن پاسخ با صدا',localStorage.tts==='0'?'خاموش':'روشن','tts'))+
  Sec('حساب',R('#1e88e5','user','نام گردولک',S.name,'name')+R('#4f7cff','play','آموزش اپ','','tour')+R('#8a8d99','check','نسخهٔ اپ','۲٫۰٫۰','none')+R('#d9472b','trash','پاک‌کردن همه داده‌ها','','reset'))}
 
 const PAGES={food:renderFood,workout:renderWorkout,stats:renderStats,profile:renderProfile,chat:renderChat,settings:renderSettings};
@@ -335,8 +335,9 @@ const SYS=()=>`تو مربی ورزشی و تغذیه شخصی کاربر هست
 
 /* ---------- Gemini ---------- */
 async function gemini(contents){
- const k=getKey();if(!k)throw new Error('ابتدا کلید API را در پروفایل وارد کن.');
- const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':k},
+ const k=getKey();if(!k)throw new Error('ابتدا کلید API را در تنظیمات وارد کن.');
+ const ac=new AbortController();setTimeout(()=>ac.abort(),60000);
+ const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName()}:generateContent`,{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','x-goog-api-key':k},
   body:JSON.stringify({systemInstruction:{parts:[{text:SYS()}]},contents,tools:[{functionDeclarations:DECL}],generationConfig:{temperature:0.1}})});
  const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'خطای شبکه');return j.candidates?.[0]?.content||{parts:[{text:'پاسخی دریافت نشد.'}]};
 }
@@ -353,7 +354,7 @@ async function ask(userParts,label){
     S.chat.push({r:'t',t:'اجرا شد: '+c.functionCall.name});return{functionResponse:{name:c.functionCall.name,response:r}}});
    contents.push({role:'user',parts:res});
   }
- }catch(e){S.chat.push({r:'a',t:'خطا: '+e.message})}
+ }catch(e){S.chat.push({r:'a',t:e.name==='AbortError'?'پاسخی نیومد (۶۰ ثانیه). اینترنت یا فیلترشکن رو چک کن.':'خطا ('+modelName()+'): '+e.message})}
  busy=false;save();render();
 }
 const b64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f)});
@@ -424,6 +425,7 @@ document.addEventListener('click',e=>{
  else if(a==='steps')fld('هدف قدم روزانه','steps','تعداد قدم');
  else if(a==='name')fld('نام گردولک','name','نام','text');
  else if(a==='tour')tour(0);
+ else if(a==='model')form('نام مدل جمینای',[['v','gemini-3.8-flash','text']],v=>{if(v.v.trim())localStorage.setItem('gemini_model',v.v.trim())});
  else if(a==='food-text'){sheet(false);form('توضیح غذا',[['t','مثلاً: دو تخم‌مرغ و یک نان سنگک']],v=>{if(v.t)ask([{text:'این غذا را ثبت کن: '+v.t+' . کالری و ماکروها را تخمین بزن و با log_food ثبت کن.'}],v.t)})}
  else if(a==='key'){$('#keyIn').value=getKey();$('#keyModal').classList.add('show')}
  else if(a==='goal')num('هدف کالری','goal','کیلوکالری در روز');
