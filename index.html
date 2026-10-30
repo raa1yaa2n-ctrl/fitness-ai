@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
-  <title>Gravl AI - White</title>
+  <title>Gravl AI Pro</title>
   <style>
     :root {
-      --bg: #f2f2f7; 
+      --bg: #f7f8fa; 
       --surface: #ffffff; 
-      --surface-2: #e5e5ea;
-      --fg: #1c1c1e; 
-      --muted: #8e8e93; 
-      --accent: #007aff; 
-      --accent-2: #34c759; 
-      --danger: #ff3b30;
-      --border: rgba(0,0,0,0.05);
+      --surface-2: #f0f2f5;
+      --fg: #111827; 
+      --muted: #6b7280; 
+      --accent: #2563eb; /* آبی مدرن */
+      --accent-2: #10b981; /* سبز */
+      --danger: #ef4444;
+      --shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 80px; min-height: 100vh; display: flex; flex-direction: column; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 100px; min-height: 100vh; display: flex; flex-direction: column; }
     
     /* Screens */
     .screen { display: none; padding: 20px 16px; animation: fade .3s ease; flex: 1; overflow-y: auto; }
@@ -26,55 +26,80 @@
     @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
     
     /* Typography & Cards */
-    .top-bar h1 { font-size: 26px; margin: 0; font-weight: 800; color: var(--fg); }
-    .muted { color: var(--muted); font-size: 14px; margin-top: 5px; }
-    .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-top: 16px; box-shadow: 0 4px 15px var(--border); }
-    .card.hero { background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%); border: 1px solid #bae6fd; }
-    .label { color: var(--accent); font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
-    .title { font-size: 20px; font-weight: bold; margin: 8px 0; color: var(--fg); }
+    .top-bar h1 { font-size: 26px; margin: 0; font-weight: 800; color: var(--fg); letter-spacing: -0.5px;}
+    .muted { color: var(--muted); font-size: 14px; margin-top: 6px; font-weight: 500;}
+    .card { background: var(--surface); border-radius: 24px; padding: 20px; margin-top: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
+    .card.hero { background: linear-gradient(135deg, #e0e7ff 0%, #ffffff 100%); border: 1px solid #c7d2fe; }
+    .label { color: var(--accent); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;}
+    .title { font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--fg); }
     
     /* Buttons */
-    .btn { background: var(--accent); color: white; border: none; border-radius: 14px; padding: 16px; width: 100%; font-size: 16px; font-weight: bold; margin-top: 15px; cursor: pointer; transition: 0.2s; }
+    .btn { background: var(--accent); color: white; border: none; border-radius: 16px; padding: 16px; width: 100%; font-size: 16px; font-weight: 700; margin-top: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);}
     .btn:active { transform: scale(0.97); }
-    .btn-ghost { background: #f2f2f7; border: 1px solid var(--surface-2); color: var(--fg); }
+    .btn-ghost { background: var(--surface-2); border: none; color: var(--fg); box-shadow: none;}
     
     /* Stats Grid */
-    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
-    .stat-box { background: var(--surface); padding: 16px; border-radius: 20px; text-align: center; box-shadow: 0 4px 15px var(--border); }
-    .stat-val { font-size: 26px; font-weight: bold; color: var(--accent-2); }
-    .stat-lbl { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 500;}
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    .stat-box { background: var(--surface); padding: 20px 16px; border-radius: 24px; text-align: center; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
+    .stat-val { font-size: 28px; font-weight: 800; color: var(--fg); }
+    .stat-lbl { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 600;}
 
     /* Chat UI */
-    .chat-container { display: flex; flex-direction: column; gap: 12px; padding-bottom: 80px; min-height: 50vh; }
-    .bubble { padding: 14px 18px; border-radius: 20px; font-size: 15px; width: fit-content; max-width: 85%; line-height: 1.6; white-space: pre-wrap; }
-    .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 4px; box-shadow: 0 2px 10px var(--border); }
-    .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 4px; }
+    .chat-container { display: flex; flex-direction: column; gap: 16px; padding-bottom: 100px; min-height: 50vh; }
+    .bubble { padding: 14px 18px; border-radius: 22px; font-size: 15px; width: fit-content; max-width: 85%; line-height: 1.7; white-space: pre-wrap; font-weight: 500;}
+    .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 6px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02);}
+    .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 6px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); }
     
-    .chat-input-area { position: fixed; bottom: 85px; left: 10px; right: 10px; display: flex; gap: 8px; background: var(--surface); padding: 8px; border-radius: 30px; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border: 1px solid var(--surface-2); }
-    .chat-input-area input[type="text"] { flex: 1; background: transparent; border: none; color: var(--fg); padding: 10px; outline: none; font-size: 16px; }
-    .icon-btn { background: #f2f2f7; color: var(--fg); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
+    /* Elegant Chat Input */
+    .chat-input-area { 
+      position: fixed; 
+      bottom: 85px; 
+      left: 12px; 
+      right: 12px; 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      background: var(--surface); 
+      padding: 6px; 
+      border-radius: 32px; 
+      z-index: 100; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+      border: 1px solid var(--surface-2); 
+    }
+    .chat-input-area input[type="text"] { flex: 1; background: transparent; border: none; color: var(--fg); padding: 12px 10px; outline: none; font-size: 15px; font-weight: 500;}
+    
+    .icon-btn { background: var(--surface-2); color: var(--muted); border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
+    .icon-btn svg { width: 22px; height: 22px; }
     .icon-btn.recording { background: var(--danger); animation: pulse 1s infinite; color: white; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    .btn-send { background: var(--accent); color: white; }
+    .btn-send { background: var(--accent); color: white; width: 48px; height: 48px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);}
+    .btn-send svg { width: 20px; height: 20px; margin-right: 2px; }
 
     /* Settings */
     .input-group { margin-bottom: 15px; }
-    .input-group input { width: 100%; padding: 14px; background: #f2f2f7; border: 1px solid var(--surface-2); border-radius: 12px; color: var(--fg); margin-top: 5px; outline: none; font-size: 15px;}
-    .switch { width: 50px; height: 28px; border-radius: 15px; background: var(--surface-2); border: none; position: relative; cursor: pointer; transition: 0.3s; }
-    .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s; }
+    .input-group input { width: 100%; padding: 16px; background: var(--surface-2); border: 1px solid transparent; border-radius: 16px; color: var(--fg); margin-top: 6px; outline: none; font-size: 15px; font-weight: 500; transition: 0.2s;}
+    .input-group input:focus { border-color: var(--accent); background: var(--surface);}
+    .switch { width: 54px; height: 30px; border-radius: 20px; background: var(--surface-2); border: none; position: relative; cursor: pointer; transition: 0.3s; }
+    .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s; }
     .switch.on { background: var(--accent-2); }
-    .switch.on::after { left: 25px; }
+    .switch.on::after { left: 27px; }
 
     /* Navigation */
-    .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--surface-2); display: flex; justify-content: space-around; align-items: center; padding-bottom: env(safe-area-inset-bottom); z-index: 200; }
-    .nav-btn { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-weight: 600;}
-    .nav-btn span { font-size: 24px; }
-    .nav-btn.active { color: var(--accent); }
+    .nav-bar { 
+      position: fixed; bottom: 15px; left: 15px; right: 15px; height: 70px; 
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border-radius: 24px; border: 1px solid rgba(0,0,0,0.05);
+      display: flex; justify-content: space-around; align-items: center; 
+      z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    .nav-btn { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-weight: 700; transition: 0.2s;}
+    .nav-btn svg { width: 24px; height: 24px; stroke-width: 2; }
+    .nav-btn.active { color: var(--accent); transform: translateY(-2px);}
 
     /* Lists */
     ul { padding-right: 20px; margin-top: 10px; margin-bottom: 0;}
-    li { margin-bottom: 12px; color: var(--fg); font-size: 14px; line-height: 1.5; border-bottom: 1px solid var(--surface-2); padding-bottom: 8px;}
-    li b { color: var(--accent); }
+    li { margin-bottom: 12px; color: var(--fg); font-size: 14px; font-weight: 500; line-height: 1.6; border-bottom: 1px solid var(--surface-2); padding-bottom: 12px;}
+    li b { color: var(--accent); font-size: 16px; }
   </style>
 </head>
 <body>
@@ -87,15 +112,15 @@
       <div class="card hero">
         <div class="label">هوش مصنوعی فعال است</div>
         <div class="title">آماده تمرین</div>
-        <p class="muted">کافیه توی تب مربی ویدیو بفرستی یا بگی چی تمرین کردی.</p>
-        <button class="btn" onclick="switchTab('coach')">گفتگو با مربی 🎯</button>
+        <p class="muted">ویدیو بفرست یا بگو چی تمرین کردی.</p>
+        <button class="btn" onclick="switchTab('coach')">گفتگو با مربی</button>
       </div>
       
       <div class="stats">
         <div class="stat-box"><div class="stat-val" id="home-cal">2000</div><div class="stat-lbl">کالری دریافتی</div></div>
         <div class="stat-box"><div class="stat-val" id="home-burned" style="color:var(--danger)">0</div><div class="stat-lbl">کالری سوخته</div></div>
         <div class="stat-box"><div class="stat-val" id="home-water" style="color:var(--accent)">1.5</div><div class="stat-lbl">آب (L)</div></div>
-        <div class="stat-box"><div class="stat-val" id="home-sleep" style="color:#af52de">7</div><div class="stat-lbl">خواب (h)</div></div>
+        <div class="stat-box"><div class="stat-val" id="home-sleep" style="color:#8b5cf6">7</div><div class="stat-lbl">خواب (h)</div></div>
       </div>
     </section>
 
@@ -118,15 +143,27 @@
         <div class="bubble ai">سلام! من مغز متفکر برنامه‌ام. 
 چی کار کنم برات؟
 ۱. می‌تونی بگی: «من امروز ۳۰ تا اسکات رفتم، ثبتش کن و کالریمو ببر بالا»
-۲. یا فقط **ویدیوی تمرینت** (از خودت یا اینستا) رو با دکمه 📎 بفرستی تا خودم ببینم و ثبتش کنم!</div>
+۲. یا فقط **ویدیوی تمرینت** (از خودت یا اینستا) رو بفرستی تا خودم ببینم و ثبتش کنم!</div>
       </div>
       
       <div class="chat-input-area">
-        <label class="icon-btn" for="media-upload">📎</label>
+        <!-- SVG آیکون سنجاق (پیوست) -->
+        <label class="icon-btn" for="media-upload">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+        </label>
         <input type="file" id="media-upload" accept="video/*,image/*" style="display: none;">
-        <input type="text" id="chat-input" placeholder="بنویس یا میکروفن رو بزن..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        <button class="icon-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
-        <button class="icon-btn btn-send" onclick="sendMessage()">➤</button>
+        
+        <input type="text" id="chat-input" placeholder="پیامت رو بنویس..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        
+        <!-- SVG آیکون میکروفن -->
+        <button class="icon-btn" id="mic-btn" onclick="toggleMic()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </button>
+        
+        <!-- SVG آیکون ارسال (هواپیما) -->
+        <button class="icon-btn btn-send" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
       </div>
     </section>
 
@@ -136,7 +173,7 @@
       <div class="card">
         <div class="label">خلاصه عملکرد</div>
         <div class="title">به زودی...</div>
-        <p class="muted">نمودارهای پیشرفت و رکوردها در آپدیت‌های بعدی اینجا اضافه می‌شوند.</p>
+        <p class="muted">نمودارهای پیشرفت در آپدیت‌های بعدی اضافه می‌شوند.</p>
       </div>
     </section>
 
@@ -148,14 +185,14 @@
         <div class="input-group">
           <input type="password" id="api-key" placeholder="AQ.Ab8...">
         </div>
-        <button class="btn" onclick="saveApiKey()">ذخیره کلید در گوشی</button>
-        <p class="muted" id="key-status" style="font-weight:bold;">وضعیت: ذخیره نشده</p>
+        <button class="btn" onclick="saveApiKey()">ذخیره کلید جدید</button>
+        <p class="muted" id="key-status" style="font-weight:700; margin-top:12px;">وضعیت: ذخیره نشده</p>
       </div>
       
       <div class="card">
         <div class="label">تنظیمات صدا</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-          <span style="font-weight:500;">مربی با صدا جواب بده (TTS)</span>
+          <span style="font-weight:600;">مربی با صدا جواب بده (TTS)</span>
           <button class="switch on" id="tts-toggle" onclick="toggleTTS()"></button>
         </div>
       </div>
@@ -163,11 +200,31 @@
   </main>
 
   <nav class="nav-bar">
-    <button class="nav-btn active" onclick="switchTab('home')" data-tab="home"><span>🏠</span>خانه</button>
-    <button class="nav-btn" onclick="switchTab('train')" data-tab="train"><span>💪</span>تمرین</button>
-    <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach"><span>🎯</span>مربی</button>
-    <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress"><span>📊</span>پیشرفت</button>
-    <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile"><span>⚙️</span>پروفایل</button>
+    <!-- SVG آیکون خانه -->
+    <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+      خانه
+    </button>
+    <!-- SVG آیکون دمبل -->
+    <button class="nav-btn" onclick="switchTab('train')" data-tab="train">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path><path d="M6 10v4"></path><path d="M18 10v4"></path><path d="M10 3h4"></path><path d="M10 21h4"></path></svg>
+      تمرین
+    </button>
+    <!-- SVG آیکون چت/هوش مصنوعی -->
+    <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      مربی
+    </button>
+    <!-- SVG آیکون نمودار -->
+    <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+      پیشرفت
+    </button>
+    <!-- SVG آیکون چرخ‌دنده -->
+    <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      پروفایل
+    </button>
   </nav>
 
   <script>
@@ -197,7 +254,7 @@
         list.innerHTML = `<li class="muted" style="border:none;">هنوز تمرینی ثبت نشده است.</li>`;
       } else {
         list.innerHTML = state.workouts.map(w => 
-          `<li><b>${w.exercise}</b> (${w.sets} ست / ${w.reps} تکرار) <br><span style="color:var(--danger); font-size:12px; font-weight:bold;">+${w.calories} کالری سوخته</span></li>`
+          `<li><b>${w.exercise}</b> (${w.sets} ست / ${w.reps} تکرار) <br><span style="color:var(--danger); font-size:13px; font-weight:bold;">+${w.calories} کالری سوخته</span></li>`
         ).join('');
       }
       
@@ -230,7 +287,7 @@
       if(key.length > 10) { 
         state.apiKey = key;
         saveState();
-        alert('کلید در حافظه گوشی شما ذخیره شد!');
+        alert('کلید جدید با موفقیت ذخیره شد!');
       } else { alert('کلید وارد شده معتبر نیست.'); }
     }
 
@@ -262,7 +319,7 @@
     }
 
     // ==========================================
-    // 4. AI BRAIN & GOD MODE (مدل جدید Gemini 2.0 Flash)
+    // 4. AI BRAIN & GOD MODE
     // ==========================================
     const AI_TOOLS = [{
       functionDeclarations: [
@@ -302,7 +359,6 @@
         ? [{ role: "user", parts: mediaParts }] 
         : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام کاربر: " + userText }] }];
 
-      // استفاده از مدل فوق سریع و باهوش Gemini 2.0 Flash
       const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`;
       
       try {
@@ -312,10 +368,7 @@
           body: JSON.stringify({ 
             contents: contents, 
             tools: AI_TOOLS,
-            generationConfig: {
-              temperature: 0.4, // تنظیم دما برای جواب‌های دقیق‌تر و منطقی‌تر
-              maxOutputTokens: 1000
-            }
+            generationConfig: { temperature: 0.4, maxOutputTokens: 1000 }
           })
         });
 
@@ -348,7 +401,7 @@
         return part.text || "متوجه نشدم.";
       } catch (err) {
         if (err.message.includes('Failed to fetch')) {
-           throw new Error("اتصال به اینترنت برقرار نیست. اگر در ایران هستید، حتماً VPN (فیلترشکن) خود را روشن کنید.");
+           throw new Error("اتصال برقرار نیست. حتماً VPN (فیلترشکن) خود را روشن کنید.");
         }
         throw err;
       }
@@ -375,7 +428,7 @@
       if(!file) return;
       if(!state.apiKey) { alert('اول برو تب تنظیمات و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
 
-      addMessage(`📎 فایل ارسال شد`, 'user');
+      addMessage(`فایل ارسال شد`, 'user');
       let loadingMsg = addMessage('⏳ دارم ویدیو رو بررسی می‌کنم، صبر کن...', 'ai');
 
       try {
@@ -435,4 +488,4 @@
     updateUI();
   </script>
 </body>
-</html>
+          </html>
