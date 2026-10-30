@@ -7,21 +7,21 @@
   <title>Gravl AI Pro</title>
   <style>
     :root {
-      --bg: #f7f8fa; 
+      --bg: #f4f6f9; 
       --surface: #ffffff; 
       --surface-2: #f0f2f5;
-      --fg: #111827; 
-      --muted: #6b7280; 
-      --accent: #2563eb; /* آبی مدرن */
-      --accent-2: #10b981; /* سبز */
+      --fg: #1a1c21; 
+      --muted: #8e929d; 
+      --accent: #2563eb; /* آبی تمیز */
+      --accent-2: #10b981; 
       --danger: #ef4444;
       --shadow: 0 4px 20px rgba(0,0,0,0.05);
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 100px; min-height: 100vh; display: flex; flex-direction: column; }
+    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 120px; min-height: 100vh; display: flex; flex-direction: column; }
     
     /* Screens */
-    .screen { display: none; padding: 20px 16px; animation: fade .3s ease; flex: 1; overflow-y: auto; }
+    .screen { display: none; padding: 24px 16px; animation: fade .3s ease; flex: 1; overflow-y: auto; }
     .screen.active { display: block; }
     @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
     
@@ -29,8 +29,8 @@
     .top-bar h1 { font-size: 26px; margin: 0; font-weight: 800; color: var(--fg); letter-spacing: -0.5px;}
     .muted { color: var(--muted); font-size: 14px; margin-top: 6px; font-weight: 500;}
     .card { background: var(--surface); border-radius: 24px; padding: 20px; margin-top: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
-    .card.hero { background: linear-gradient(135deg, #e0e7ff 0%, #ffffff 100%); border: 1px solid #c7d2fe; }
-    .label { color: var(--accent); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;}
+    .card.hero { background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border: 1px solid #dbeafe; }
+    .label { color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;}
     .title { font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--fg); }
     
     /* Buttons */
@@ -50,10 +50,10 @@
     .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 6px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02);}
     .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 6px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); }
     
-    /* Elegant Chat Input */
+    /* Chat Input Area - FIXED */
     .chat-input-area { 
       position: fixed; 
-      bottom: 85px; 
+      bottom: 100px; 
       left: 12px; 
       right: 12px; 
       display: flex; 
@@ -63,16 +63,46 @@
       padding: 6px; 
       border-radius: 32px; 
       z-index: 100; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
       border: 1px solid var(--surface-2); 
     }
-    .chat-input-area input[type="text"] { flex: 1; background: transparent; border: none; color: var(--fg); padding: 12px 10px; outline: none; font-size: 15px; font-weight: 500;}
+    .chat-input-area input[type="text"] { 
+      flex: 1; 
+      min-width: 0; /* جلوگیری از بیرون زدن */
+      background: transparent; 
+      border: none; 
+      color: var(--fg); 
+      padding: 10px 8px; 
+      outline: none; 
+      font-size: 15px; 
+      font-weight: 500;
+    }
     
-    .icon-btn { background: var(--surface-2); color: var(--muted); border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
-    .icon-btn svg { width: 22px; height: 22px; }
+    .icon-btn { 
+      background: var(--surface-2); 
+      color: var(--muted); 
+      border: none; 
+      width: 42px; 
+      height: 42px; 
+      border-radius: 50%; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      flex-shrink: 0; 
+      transition: 0.2s; 
+    }
+    .icon-btn svg { width: 20px; height: 20px; }
     .icon-btn.recording { background: var(--danger); animation: pulse 1s infinite; color: white; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    .btn-send { background: var(--accent); color: white; width: 48px; height: 48px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);}
+    
+    .btn-send { 
+      background: var(--accent); 
+      color: white; 
+      width: 46px; 
+      height: 46px; 
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
     .btn-send svg { width: 20px; height: 20px; margin-right: 2px; }
 
     /* Settings */
@@ -86,11 +116,11 @@
 
     /* Navigation */
     .nav-bar { 
-      position: fixed; bottom: 15px; left: 15px; right: 15px; height: 70px; 
-      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      border-radius: 24px; border: 1px solid rgba(0,0,0,0.05);
+      position: fixed; bottom: 16px; left: 16px; right: 16px; height: 72px; 
+      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-radius: 24px; border: 1px solid rgba(0,0,0,0.04);
       display: flex; justify-content: space-around; align-items: center; 
-      z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     .nav-btn { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-weight: 700; transition: 0.2s;}
     .nav-btn svg { width: 24px; height: 24px; stroke-width: 2; }
@@ -146,8 +176,8 @@
 ۲. یا فقط **ویدیوی تمرینت** (از خودت یا اینستا) رو بفرستی تا خودم ببینم و ثبتش کنم!</div>
       </div>
       
+      <!-- کادر چت کاملاً فیکس شده -->
       <div class="chat-input-area">
-        <!-- SVG آیکون سنجاق (پیوست) -->
         <label class="icon-btn" for="media-upload">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
         </label>
@@ -155,12 +185,10 @@
         
         <input type="text" id="chat-input" placeholder="پیامت رو بنویس..." onkeypress="if(event.key === 'Enter') sendMessage()">
         
-        <!-- SVG آیکون میکروفن -->
         <button class="icon-btn" id="mic-btn" onclick="toggleMic()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
         </button>
         
-        <!-- SVG آیکون ارسال (هواپیما) -->
         <button class="icon-btn btn-send" onclick="sendMessage()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(180deg);"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
@@ -200,29 +228,24 @@
   </main>
 
   <nav class="nav-bar">
-    <!-- SVG آیکون خانه -->
     <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
       خانه
     </button>
-    <!-- SVG آیکون دمبل -->
     <button class="nav-btn" onclick="switchTab('train')" data-tab="train">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path><path d="M6 10v4"></path><path d="M18 10v4"></path><path d="M10 3h4"></path><path d="M10 21h4"></path></svg>
       تمرین
     </button>
-    <!-- SVG آیکون چت/هوش مصنوعی -->
     <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
       مربی
     </button>
-    <!-- SVG آیکون نمودار -->
     <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
       پیشرفت
     </button>
-    <!-- SVG آیکون چرخ‌دنده -->
     <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       پروفایل
     </button>
   </nav>
@@ -359,7 +382,8 @@
         ? [{ role: "user", parts: mediaParts }] 
         : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام کاربر: " + userText }] }];
 
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`;
+      // مدل جدید طبق خواسته خود گوگل
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${state.apiKey}`;
       
       try {
         let res = await fetch(API_URL, {
@@ -488,4 +512,4 @@
     updateUI();
   </script>
 </body>
-          </html>
+  </html>
