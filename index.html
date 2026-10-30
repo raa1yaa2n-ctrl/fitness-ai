@@ -3,187 +3,260 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <title>Gravl AI Pro</title>
+  <meta name="theme-color" content="#f4f5f9">
+  <title>Gravl AI - Ultimate</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;800;900&display=swap');
+
     :root {
-      --bg: #f4f6f9; 
+      --bg: #f4f5f9; 
       --surface: #ffffff; 
-      --surface-2: #f0f2f5;
-      --fg: #1a1c21; 
+      --surface-pill: #f0f0f5;
+      --fg: #111111; 
       --muted: #8e929d; 
-      --accent: #2563eb; /* آبی تمیز */
-      --accent-2: #10b981; 
+      --accent: #000000; 
+      --blue: #3b82f6;
       --danger: #ef4444;
-      --shadow: 0 4px 20px rgba(0,0,0,0.05);
+      --gold: #f59e0b;
+      --radius: 28px;
     }
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 120px; min-height: 100vh; display: flex; flex-direction: column; }
+    
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Vazirmatn', system-ui, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--fg); padding-bottom: 110px; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
     
     /* Screens */
-    .screen { display: none; padding: 24px 16px; animation: fade .3s ease; flex: 1; overflow-y: auto; }
+    .screen { display: none; padding: 20px 16px; animation: fade .3s ease; flex: 1; }
     .screen.active { display: block; }
     @keyframes fade { from { opacity: 0; transform: translateY(10px); } }
     
-    /* Typography & Cards */
-    .top-bar h1 { font-size: 26px; margin: 0; font-weight: 800; color: var(--fg); letter-spacing: -0.5px;}
-    .muted { color: var(--muted); font-size: 14px; margin-top: 6px; font-weight: 500;}
-    .card { background: var(--surface); border-radius: 24px; padding: 20px; margin-top: 16px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
-    .card.hero { background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border: 1px solid #dbeafe; }
-    .label { color: var(--accent); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;}
-    .title { font-size: 22px; font-weight: 800; margin: 4px 0; color: var(--fg); }
+    /* Top Header */
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .pill-btn { background: var(--surface); padding: 10px 18px; border-radius: 50px; font-size: 14px; font-weight: 700; color: var(--fg); display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); text-decoration: none; border: none; cursor: pointer; }
+    .pill-icon { background: var(--surface); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); cursor: pointer; border: none; }
+    .pill-icon svg { width: 22px; height: 22px; stroke: var(--fg); }
+
+    /* Bento Grid (Home) */
+    .bento-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 12px; margin-bottom: 24px; }
+    .bento-col { display: flex; flex-direction: column; gap: 12px; }
+    .bento-card { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
+    .bento-card.center { align-items: center; text-align: center; }
+    .card-title { font-size: 13px; color: var(--muted); font-weight: 700; margin-bottom: 12px; }
     
-    /* Buttons */
-    .btn { background: var(--accent); color: white; border: none; border-radius: 16px; padding: 16px; width: 100%; font-size: 16px; font-weight: 700; margin-top: 16px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);}
-    .btn:active { transform: scale(0.97); }
-    .btn-ghost { background: var(--surface-2); border: none; color: var(--fg); box-shadow: none;}
+    .mascot-hero { font-size: 50px; margin-bottom: 10px; text-align: center; filter: drop-shadow(0 10px 15px rgba(59,130,246,0.3)); }
+    .hero-title { font-size: 18px; font-weight: 800; line-height: 1.4; margin-bottom: 16px; text-align: center; }
     
-    /* Stats Grid */
-    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
-    .stat-box { background: var(--surface); padding: 20px 16px; border-radius: 24px; text-align: center; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
-    .stat-val { font-size: 28px; font-weight: 800; color: var(--fg); }
-    .stat-lbl { font-size: 13px; color: var(--muted); margin-top: 6px; font-weight: 600;}
+    .btn-black { background: var(--accent); color: white; border: none; border-radius: 50px; padding: 14px 20px; font-size: 15px; font-weight: 700; width: 100%; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+    .streak-val { font-size: 28px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 8px;}
+    .ring-val { font-size: 24px; font-weight: 900; border: 4px solid var(--surface-pill); border-radius: 50%; width: 75px; height: 75px; display: flex; align-items: center; justify-content: center; margin: 0 auto; color: var(--blue);}
+
+    /* Sections */
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px;}
+    .section-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px;}
+    .badge-pro { background: var(--accent); color: white; font-size: 11px; padding: 4px 10px; border-radius: 20px; display: flex; align-items: center; gap: 4px;}
+
+    /* Horizontal Scroll */
+    .h-scroll { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+    .h-scroll::-webkit-scrollbar { display: none; }
+    .cat-pill { background: var(--surface); border: none; padding: 10px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; color: var(--muted); white-space: nowrap; cursor: pointer; transition: 0.2s;}
+    .cat-pill.active { background: var(--accent); color: white; }
+    
+    .workout-card { min-width: 280px; background: var(--surface); border-radius: 24px; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .workout-img { width: 100%; height: 140px; border-radius: 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-size: 70px; background: linear-gradient(135deg, #e0f2fe, #bae6fd); }
 
     /* Chat UI */
     .chat-container { display: flex; flex-direction: column; gap: 16px; padding-bottom: 100px; min-height: 50vh; }
-    .bubble { padding: 14px 18px; border-radius: 22px; font-size: 15px; width: fit-content; max-width: 85%; line-height: 1.7; white-space: pre-wrap; font-weight: 500;}
-    .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 6px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02);}
-    .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 6px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25); }
+    .bubble { padding: 14px 18px; border-radius: 24px; font-size: 15px; width: fit-content; max-width: 85%; line-height: 1.7; font-weight: 500; word-wrap: break-word;}
+    .bubble.ai { background: var(--surface); color: var(--fg); border-bottom-right-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+    .bubble.user { background: var(--accent); color: white; align-self: flex-end; border-bottom-left-radius: 6px; }
     
-    /* Chat Input Area - FIXED */
     .chat-input-area { 
-      position: fixed; 
-      bottom: 100px; 
-      left: 12px; 
-      right: 12px; 
-      display: flex; 
-      align-items: center; 
-      gap: 6px; 
-      background: var(--surface); 
-      padding: 6px; 
-      border-radius: 32px; 
-      z-index: 100; 
-      box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
-      border: 1px solid var(--surface-2); 
+      position: fixed; bottom: 110px; left: 16px; right: 16px; 
+      display: flex; align-items: center; gap: 8px; 
+      background: var(--surface); padding: 8px; border-radius: 50px; 
+      z-index: 100; border: 1px solid rgba(0,0,0,0.05); 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
     }
-    .chat-input-area input[type="text"] { 
-      flex: 1; 
-      min-width: 0; /* جلوگیری از بیرون زدن */
-      background: transparent; 
-      border: none; 
-      color: var(--fg); 
-      padding: 10px 8px; 
-      outline: none; 
-      font-size: 15px; 
-      font-weight: 500;
-    }
-    
-    .icon-btn { 
-      background: var(--surface-2); 
-      color: var(--muted); 
-      border: none; 
-      width: 42px; 
-      height: 42px; 
-      border-radius: 50%; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      flex-shrink: 0; 
-      transition: 0.2s; 
-    }
+    .chat-input-area input[type="text"] { flex: 1; min-width: 0; background: transparent; border: none; color: var(--fg); padding: 10px 12px; outline: none; font-size: 15px; font-family: inherit;}
+    .icon-btn { background: var(--surface-pill); color: var(--fg); border: none; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: 0.2s; }
     .icon-btn svg { width: 20px; height: 20px; }
-    .icon-btn.recording { background: var(--danger); animation: pulse 1s infinite; color: white; }
+    .icon-btn.recording { background: var(--danger); color: white; animation: pulse 1s infinite; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-    
-    .btn-send { 
-      background: var(--accent); 
-      color: white; 
-      width: 46px; 
-      height: 46px; 
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-    .btn-send svg { width: 20px; height: 20px; margin-right: 2px; }
+    .btn-send { background: var(--accent); color: white; }
+    .btn-send svg { width: 22px; height: 22px; margin-right: 2px; }
+
+    /* Nutrition Rings */
+    .macro-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+    .macro-ring { min-width: 100px; background: var(--surface); padding: 15px; border-radius: 30px; display: flex; flex-direction: column; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);}
+    .ring-circle { width: 60px; height: 60px; border-radius: 50%; border: 5px solid var(--surface-pill); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;}
+
+    /* Stats Cards */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-card { background: var(--surface); padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; min-height: 140px;}
+    .stat-card.full { grid-column: span 2; min-height: 120px;}
+    .stat-icon { width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: var(--surface-pill); color: var(--fg); }
+    .stat-val { font-size: 28px; font-weight: 900; color: var(--fg); margin-top: 10px;}
+    .stat-lbl { font-size: 13px; color: var(--muted); font-weight: 600; }
 
     /* Settings */
-    .input-group { margin-bottom: 15px; }
-    .input-group input { width: 100%; padding: 16px; background: var(--surface-2); border: 1px solid transparent; border-radius: 16px; color: var(--fg); margin-top: 6px; outline: none; font-size: 15px; font-weight: 500; transition: 0.2s;}
-    .input-group input:focus { border-color: var(--accent); background: var(--surface);}
-    .switch { width: 54px; height: 30px; border-radius: 20px; background: var(--surface-2); border: none; position: relative; cursor: pointer; transition: 0.3s; }
-    .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s; }
-    .switch.on { background: var(--accent-2); }
-    .switch.on::after { left: 27px; }
+    .settings-group { background: var(--surface); border-radius: var(--radius); overflow: hidden; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .settings-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--bg); cursor: pointer; }
+    .settings-item:last-child { border-bottom: none; }
+    .settings-item-left { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 15px;}
+    .settings-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .settings-item-right { color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 8px;}
+    .switch { width: 50px; height: 28px; border-radius: 20px; background: var(--surface-pill); border: none; position: relative; cursor: pointer; transition: 0.3s; }
+    .switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s; }
+    .switch.on { background: var(--blue); }
+    .switch.on::after { left: 25px; }
 
-    /* Navigation */
+    /* Bottom Navigation (Gravl Style) */
+    .nav-wrapper { position: fixed; bottom: 16px; left: 16px; right: 16px; display: flex; justify-content: center; z-index: 200; }
     .nav-bar { 
-      position: fixed; bottom: 16px; left: 16px; right: 16px; height: 72px; 
-      background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-radius: 24px; border: 1px solid rgba(0,0,0,0.04);
-      display: flex; justify-content: space-around; align-items: center; 
-      z-index: 200; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      width: 100%; max-width: 400px; height: 72px; background: var(--surface); 
+      border-radius: 40px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
+      display: flex; justify-content: space-between; align-items: center; padding: 0 10px; position: relative;
     }
-    .nav-btn { background: none; border: none; color: var(--muted); font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-weight: 700; transition: 0.2s;}
-    .nav-btn svg { width: 24px; height: 24px; stroke-width: 2; }
-    .nav-btn.active { color: var(--accent); transform: translateY(-2px);}
+    .nav-btn { background: none; border: none; color: var(--muted); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; height: 100%; transition: 0.2s;}
+    .nav-btn svg { width: 24px; height: 24px; stroke-width: 2; fill: none; stroke: var(--muted); transition: 0.2s;}
+    .nav-btn.active svg { stroke: var(--accent); }
+    
+    .nav-plus { 
+      width: 60px; height: 60px; background: var(--accent); border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; border: none; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; margin-top: -20px; flex-shrink: 0;
+    }
+    .nav-plus svg { width: 28px; height: 28px; stroke: white; stroke-width: 2.5; }
 
-    /* Lists */
-    ul { padding-right: 20px; margin-top: 10px; margin-bottom: 0;}
-    li { margin-bottom: 12px; color: var(--fg); font-size: 14px; font-weight: 500; line-height: 1.6; border-bottom: 1px solid var(--surface-2); padding-bottom: 12px;}
-    li b { color: var(--accent); font-size: 16px; }
+    /* Modal & Overlay */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 500; display: none; opacity: 0; transition: opacity 0.3s; }
+    .modal-overlay.show { display: block; opacity: 1; }
+    .modal-content { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-radius: 30px 30px 0 0; padding: 24px; z-index: 600; transform: translateY(100%); transition: transform 0.3s; }
+    .modal-content.show { transform: translateY(0); }
+    
+    /* Chat Input Area */
+    .chat-screen { padding-bottom: 140px; }
+    .list-item { background: var(--surface); padding: 16px; border-radius: 20px; margin-bottom: 12px; font-size: 15px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);}
+    .list-item b { color: var(--fg); font-weight: 800; font-size: 16px;}
+    .list-item span { color: var(--muted); font-size: 13px; font-weight: 600;}
   </style>
 </head>
 <body>
 
   <main id="screens">
-    <!-- تب خانه -->
+    <!-- HOME -->
     <section class="screen active" data-screen="home">
-      <div class="top-bar"><h1>سلام مربی 👋</h1><p class="muted">آماده‌ای برای امروز؟</p></div>
-      
-      <div class="card hero">
-        <div class="label">هوش مصنوعی فعال است</div>
-        <div class="title">آماده تمرین</div>
-        <p class="muted">ویدیو بفرست یا بگو چی تمرین کردی.</p>
-        <button class="btn" onclick="switchTab('coach')">گفتگو با مربی</button>
+      <div class="top-header">
+        <button class="pill-icon" onclick="switchTab('profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+        <button class="pill-btn" onclick="switchTab('coach')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          چت با مربی
+        </button>
+        <div class="pill-btn" style="background:var(--accent); color:white;">تمرین</div>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-col">
+          <div class="bento-card center">
+            <div class="card-title">پیوستگی</div>
+            <div class="streak-val">🔥 <span id="streak-val">0</span></div>
+          </div>
+          <div class="bento-card center">
+            <div class="card-title">هدف هفتگی</div>
+            <div class="ring-val" id="weekly-goal">0/7</div>
+          </div>
+        </div>
+        <div class="bento-card center" style="background: linear-gradient(145deg, #e0f2fe, #ffffff); border: 1px solid #bae6fd;">
+          <div class="mascot-hero">👾</div>
+          <div class="card-title">امروز</div>
+          <div class="hero-title">یه چالش ۳۰ روزه شروع کن</div>
+          <button class="btn-black">+ انتخاب چالش</button>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">چالش‌های ۳۰ روزه</div>
+        <span style="color:var(--muted); font-size:13px;">همه</span>
       </div>
       
-      <div class="stats">
-        <div class="stat-box"><div class="stat-val" id="home-cal">2000</div><div class="stat-lbl">کالری دریافتی</div></div>
-        <div class="stat-box"><div class="stat-val" id="home-burned" style="color:var(--danger)">0</div><div class="stat-lbl">کالری سوخته</div></div>
-        <div class="stat-box"><div class="stat-val" id="home-water" style="color:var(--accent)">1.5</div><div class="stat-lbl">آب (L)</div></div>
-        <div class="stat-box"><div class="stat-val" id="home-sleep" style="color:#8b5cf6">7</div><div class="stat-lbl">خواب (h)</div></div>
+      <div class="h-scroll">
+        <div class="workout-card" style="background: linear-gradient(145deg, #fff7ed, #ffffff); border: 1px solid #ffedd5;">
+          <div class="workout-img" style="background: transparent; font-size: 80px; height: 100px;">🏃‍♂️</div>
+          <div class="badge-pro" style="background: #fef3c7; color: #d97706; margin-bottom: 8px;">مخصوص تو</div>
+          <div style="font-weight: 800; font-size: 18px; margin-bottom: 4px;">چربی سوزی</div>
+          <div style="color: var(--muted); font-size: 14px;">چون کل بدن رو می‌خوای</div>
+        </div>
       </div>
     </section>
 
-    <!-- تب تمرین -->
+    <!-- TRAIN -->
     <section class="screen" data-screen="train">
-      <div class="top-bar"><h1>تمرینات امروز</h1></div>
-      <div class="card">
-        <div class="label">تاریخچه ثبت شده</div>
-        <ul id="sets-list">
-          <li class="muted" style="border:none;">هنوز تمرینی ثبت نشده است.</li>
-        </ul>
-      </div>
-      <button class="btn btn-ghost" onclick="switchTab('coach')">+ ثبت تمرین جدید با مربی</button>
-    </section>
-
-    <!-- تب مربی -->
-    <section class="screen" data-screen="coach">
-      <div class="top-bar"><h1>مربی هوشمند</h1></div>
-      <div class="chat-container" id="chat-box">
-        <div class="bubble ai">سلام! من مغز متفکر برنامه‌ام. 
-چی کار کنم برات؟
-۱. می‌تونی بگی: «من امروز ۳۰ تا اسکات رفتم، ثبتش کن و کالریمو ببر بالا»
-۲. یا فقط **ویدیوی تمرینت** (از خودت یا اینستا) رو بفرستی تا خودم ببینم و ثبتش کنم!</div>
+      <div class="top-header">
+        <h1 style="font-size: 24px; margin:0;">تمرین</h1>
+        <button class="pill-btn" onclick="switchTab('coach')">چت با مربی</button>
       </div>
       
-      <!-- کادر چت کاملاً فیکس شده -->
+      <div class="h-scroll" style="margin-bottom: 20px;">
+        <button class="cat-pill active">شکم</button>
+        <button class="cat-pill">سینه</button>
+        <button class="cat-pill">بازو</button>
+        <button class="cat-pill">پا</button>
+        <button class="cat-pill">کمر</button>
+      </div>
+
+      <div class="workout-card" style="min-width: 100%; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div style="font-size: 13px; color: var(--muted); font-weight: 700;">یک‌روزه · بدون وسیله</div>
+            <div style="font-size: 20px; font-weight: 800; margin: 8px 0;">تمرین شکم</div>
+            <div style="color: var(--muted); font-size: 14px; margin-bottom: 16px;">مرکز بدنت رو سفت کن.</div>
+            <div style="display: flex; gap: 16px; font-size: 13px; font-weight: 600; color: var(--muted);">
+              <span>⏱ ۱۵ دقیقه</span>
+              <span>🏋️ ۴ حرکت</span>
+              <span>🔁 ۳ تکرار</span>
+            </div>
+          </div>
+          <div style="font-size: 60px;">💪</div>
+        </div>
+        <button class="btn-black" style="margin-top: 20px;">▶ شروع</button>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#fef3c7;">🏆</div>
+            میدان رقابت
+          </div>
+          <div class="settings-item-right">
+            <span style="background:var(--surface-pill); padding:4px 10px; border-radius:10px; font-size:12px;">به‌زودی</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COACH (AI) -->
+    <section class="screen chat-screen" data-screen="coach">
+      <div class="top-header">
+        <h1 style="font-size: 24px; margin:0;">مربی هوشمند</h1>
+        <button class="pill-btn" onclick="switchTab('home')">بازگشت</button>
+      </div>
+      
+      <div class="chat-container" id="chat-box">
+        <div class="bubble ai">سلام! من مربی هوشمند تو هستم با دسترسی کامل به برنامه. 
+می‌تونم:
+۱. بگی «کالری امروزمو بکن ۲۵۰۰»، خودم انجام می‌دم.
+۲. ویدیوی تمرینت رو بفرستی تا تحلیلش کنم.
+۳. با میکروفن حرف بزنی و با صدا جواب بدم.</div>
+      </div>
+      
       <div class="chat-input-area">
         <label class="icon-btn" for="media-upload">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
         </label>
         <input type="file" id="media-upload" accept="video/*,image/*" style="display: none;">
         
-        <input type="text" id="chat-input" placeholder="پیامت رو بنویس..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <input type="text" id="chat-input" placeholder="بنویس یا میکروفن رو بزن..." onkeypress="if(event.key === 'Enter') sendMessage()">
         
         <button class="icon-btn" id="mic-btn" onclick="toggleMic()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
@@ -195,100 +268,200 @@
       </div>
     </section>
 
-    <!-- تب پیشرفت -->
+    <!-- NUTRITION / PROGRESS -->
     <section class="screen" data-screen="progress">
-      <div class="top-bar"><h1>پیشرفت</h1></div>
-      <div class="card">
-        <div class="label">خلاصه عملکرد</div>
-        <div class="title">به زودی...</div>
-        <p class="muted">نمودارهای پیشرفت در آپدیت‌های بعدی اضافه می‌شوند.</p>
+      <div class="top-header">
+        <h1 style="font-size: 24px; margin:0;">آمار</h1>
+        <div class="pill-btn">این هفته</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card full" style="align-items: center; justify-content: center; text-align: center;">
+          <svg width="120" height="70" viewBox="0 0 100 50">
+            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="#f0f0f5" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 10 50 A 40 40 0 0 1 50 10" fill="none" stroke="#111" stroke-width="12" stroke-linecap="round"/>
+          </svg>
+          <div style="font-weight: 800; margin-top: -10px;">هنوز وعده‌ای ثبت نشده</div>
+          <div style="display: flex; gap: 20px; margin-top: 15px; font-size: 12px; color: var(--muted); font-weight: 700;">
+            <span>۰ روز ثبت</span>
+            <span>۰ وعده</span>
+            <span>۰ جلسه تمرین</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div style="display:flex; justify-content:space-between;">
+            <div class="stat-icon">🔥</div>
+            <span style="color:var(--gold); font-size: 18px;">✨</span>
+          </div>
+          <div class="stat-val" id="prog-burned">0</div>
+          <div class="stat-lbl">کالری سوخته</div>
+        </div>
+        
+        <div class="stat-card">
+          <div style="display:flex; justify-content:space-between;">
+            <div class="stat-icon">💧</div>
+            <span style="color:var(--gold); font-size: 18px;">✨</span>
+          </div>
+          <div class="stat-val" id="prog-water">1.5</div>
+          <div class="stat-lbl">آب (لیتر)</div>
+        </div>
       </div>
     </section>
 
-    <!-- تب پروفایل -->
+    <!-- PROFILE / SETTINGS -->
     <section class="screen" data-screen="profile">
-      <div class="top-bar"><h1>تنظیمات</h1></div>
-      <div class="card">
-        <div class="label">کلید Gemini API</div>
-        <div class="input-group">
-          <input type="password" id="api-key" placeholder="AQ.Ab8...">
-        </div>
-        <button class="btn" onclick="saveApiKey()">ذخیره کلید جدید</button>
-        <p class="muted" id="key-status" style="font-weight:700; margin-top:12px;">وضعیت: ذخیره نشده</p>
+      <div class="top-header">
+        <button class="pill-icon" onclick="switchTab('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <h1 style="font-size: 20px; margin:0;">تنظیمات</h1>
+        <div style="width: 44px;"></div>
       </div>
-      
-      <div class="card">
-        <div class="label">تنظیمات صدا</div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-          <span style="font-weight:600;">مربی با صدا جواب بده (TTS)</span>
-          <button class="switch on" id="tts-toggle" onclick="toggleTTS()"></button>
+
+      <div class="bento-card full center" style="margin-bottom: 20px; background: linear-gradient(135deg, #e0f2fe, #ffffff);">
+        <div class="mascot-hero" style="font-size: 70px;">👾</div>
+        <div style="font-size: 22px; font-weight: 900;">Leo</div>
+        <div style="color: var(--muted); font-size: 13px; margin-top: 4px;">@Leo · عضو از آبان ۱,۴۰۵</div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-item" onclick="promptApiKey()">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#eff6ff;">🔑</div>
+            کلید Gemini API
+          </div>
+          <div class="settings-item-right">
+            <span id="key-status">تنظیم نشده</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </div>
+        </div>
+        
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#f3e8ff;">🌙</div>
+            حالت تاریک
+          </div>
+          <div class="settings-item-right">
+            <button class="switch" onclick="toggleTheme(this)"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#fee2e2;">🍎</div>
+            رژیم غذایی
+          </div>
+          <div class="settings-item-right">متعادل <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#fef3c7;">🍴</div>
+            حساسیت‌ها
+          </div>
+          <div class="settings-item-right">هیچ‌کدام <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#f0fdf4;">🏋️</div>
+            سطح تمرین
+          </div>
+          <div class="settings-item-right">حرفه‌ای <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <div class="settings-icon" style="background:#e0e7ff;">📊</div>
+            آمار پیشرفت
+          </div>
+          <div class="settings-item-right"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
         </div>
       </div>
     </section>
   </main>
 
-  <nav class="nav-bar">
-    <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      خانه
-    </button>
-    <button class="nav-btn" onclick="switchTab('train')" data-tab="train">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5h11v11h-11z"></path><path d="M3 10v4"></path><path d="M21 10v4"></path><path d="M6 10v4"></path><path d="M18 10v4"></path><path d="M10 3h4"></path><path d="M10 21h4"></path></svg>
-      تمرین
-    </button>
-    <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-      مربی
-    </button>
-    <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-      پیشرفت
-    </button>
-    <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      پروفایل
-    </button>
-  </nav>
+  <div class="nav-wrapper">
+    <nav class="nav-bar">
+      <button class="nav-btn" onclick="switchTab('progress')" data-tab="progress">
+        <svg viewBox="0 0 24 24"><rect x="18" y="3" width="4" height="18" rx="1"></rect><rect x="10" y="8" width="4" height="13" rx="1"></rect><rect x="2" y="13" width="4" height="8" rx="1"></rect></svg>
+      </button>
+      <button class="nav-btn" onclick="switchTab('profile')" data-tab="profile">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </button>
+      <button class="nav-plus" onclick="switchTab('coach')">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>
+      </button>
+      <button class="nav-btn" onclick="switchTab('coach')" data-tab="coach">
+        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"></path></svg>
+      </button>
+      <button class="nav-btn active" onclick="switchTab('home')" data-tab="home">
+        <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7"></path></svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- API Key Modal -->
+  <div class="modal-overlay" id="api-modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 style="margin-top: 0; font-size: 20px; font-weight: 800;">تنظیم کلید هوش مصنوعی</h3>
+      <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">کلید API خود را از Google AI Studio دریافت کنید و در اینجا وارد کنید. این کلید فقط در گوشی شما ذخیره می‌شود.</p>
+      <input type="password" id="api-key-input" placeholder="AQ.Ab8..." style="width: 100%; padding: 16px; background: var(--bg); border: none; border-radius: 16px; margin-bottom: 16px; font-family: inherit;">
+      <button class="btn-black" onclick="saveApiKey()">ذخیره کلید</button>
+      <button style="width: 100%; background: none; border: none; color: var(--muted); font-family: inherit; margin-top: 16px; font-weight: 700;" onclick="closeModal()">انصراف</button>
+    </div>
+  </div>
 
   <script>
     // ==========================================
     // 1. STATE & LOCAL STORAGE
     // ==========================================
-    let state = JSON.parse(localStorage.getItem('appState')) || {
+    let state = JSON.parse(localStorage.getItem('gravlState')) || {
       apiKey: '', 
       ttsEnabled: true,
       calories: 2000, caloriesBurned: 0, water: 1.5, sleep: 7,
+      streak: 0, weeklyGoal: 0,
       workouts: [] 
     };
 
     function saveState() {
-      localStorage.setItem('appState', JSON.stringify(state));
+      localStorage.setItem('gravlState', JSON.stringify(state));
       updateUI();
     }
 
     function updateUI() {
       document.getElementById('home-cal').innerText = state.calories;
-      document.getElementById('home-burned').innerText = state.caloriesBurned;
       document.getElementById('home-water').innerText = state.water;
       document.getElementById('home-sleep').innerText = state.sleep;
+      document.getElementById('home-burned').innerText = state.caloriesBurned;
       
+      document.getElementById('streak-val').innerText = state.streak;
+      document.getElementById('weekly-goal').innerText = `${state.weeklyGoal}/7`;
+      document.getElementById('prog-burned').innerText = state.caloriesBurned;
+      document.getElementById('prog-water').innerText = state.water;
+
       let list = document.getElementById('sets-list');
-      if(state.workouts.length === 0) {
-        list.innerHTML = `<li class="muted" style="border:none;">هنوز تمرینی ثبت نشده است.</li>`;
-      } else {
-        list.innerHTML = state.workouts.map(w => 
-          `<li><b>${w.exercise}</b> (${w.sets} ست / ${w.reps} تکرار) <br><span style="color:var(--danger); font-size:13px; font-weight:bold;">+${w.calories} کالری سوخته</span></li>`
-        ).join('');
+      if(list) {
+        if(state.workouts.length === 0) {
+          list.innerHTML = `<li class="list-item" style="text-align:center; color:var(--muted);">هنوز تمرینی ثبت نشده است.</li>`;
+        } else {
+          list.innerHTML = state.workouts.map(w => 
+            `<li class="list-item"><b>${w.exercise}</b> <span>${w.sets} ست / ${w.reps} تکرار</span> <span style="color:var(--blue); font-weight:800;">+${w.calories} کالری</span></li>`
+          ).join('');
+        }
       }
-      
+
+      let keyStatus = document.getElementById('key-status');
       if(state.apiKey) {
-        document.getElementById('api-key').value = state.apiKey;
-        document.getElementById('key-status').innerText = "وضعیت: ✅ کلید در گوشی ذخیره شده";
-        document.getElementById('key-status').style.color = "var(--accent-2)";
+        keyStatus.innerText = "✅ ذخیره شده";
+        keyStatus.style.color = "var(--blue)";
+      } else {
+        keyStatus.innerText = "تنظیم نشده";
+        keyStatus.style.color = "var(--muted)";
       }
-      
-      let ttsBtn = document.getElementById('tts-toggle');
-      if(state.ttsEnabled) ttsBtn.classList.add('on'); else ttsBtn.classList.remove('on');
     }
 
     // ==========================================
@@ -298,38 +471,46 @@
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
       document.querySelector(`[data-screen="${tabName}"]`).classList.add('active');
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-      if(tabName === 'coach') {
-        let chatBox = document.getElementById('chat-box');
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
+      let activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+      if(activeBtn) activeBtn.classList.add('active');
+      if(tabName === 'coach') document.getElementById('chat-box').scrollTop = 9999;
     }
 
+    // Modal
+    function promptApiKey() {
+      if(state.apiKey) document.getElementById('api-key-input').value = state.apiKey;
+      document.getElementById('api-modal').classList.add('show');
+    }
+    function closeModal(e) {
+      if(e && e.target !== e.currentTarget) return;
+      document.getElementById('api-modal').classList.remove('show');
+    }
     function saveApiKey() {
-      let key = document.getElementById('api-key').value.trim();
-      if(key.length > 10) { 
+      let key = document.getElementById('api-key-input').value.trim();
+      if(key.length > 10) {
         state.apiKey = key;
         saveState();
-        alert('کلید جدید با موفقیت ذخیره شد!');
-      } else { alert('کلید وارد شده معتبر نیست.'); }
+        alert('کلید با موفقیت ذخیره شد!');
+        closeModal();
+      } else {
+        alert('کلید معتبر نیست. لطفاً یک کلید صحیح وارد کنید.');
+      }
     }
-
-    function toggleTTS() {
-      state.ttsEnabled = !state.ttsEnabled;
-      saveState();
+    function toggleTheme(btn) {
+      btn.classList.toggle('on');
+      // در این نسخه فقط سوییچ را تغییر می‌دهیم
     }
 
     // ==========================================
-    // 3. TEXT-TO-SPEECH
+    // 3. AI BRAIN & GOD MODE
     // ==========================================
-    function speak(text) {
-      if (!state.ttsEnabled || !('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      let utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'fa-IR';
-      utterance.rate = 1.0;
-      window.speechSynthesis.speak(utterance);
-    }
+    const AI_TOOLS = [{
+      functionDeclarations: [
+        { name: "update_calories", description: "تغییر کالری دریافتی روزانه", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
+        { name: "update_water", description: "تغییر مقدار آب (لیتر)", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
+        { name: "log_workout", description: "ثبت تمرین جدید", parameters: { type: "OBJECT", properties: { exercise: { type: "STRING" }, sets: { type: "NUMBER" }, reps: { type: "NUMBER" }, calories_burned: { type: "NUMBER" } }, required: ["exercise", "calories_burned"] } }
+      ]
+    }];
 
     function addMessage(text, sender) {
       let box = document.getElementById('chat-box');
@@ -341,23 +522,11 @@
       return div;
     }
 
-    // ==========================================
-    // 4. AI BRAIN & GOD MODE
-    // ==========================================
-    const AI_TOOLS = [{
-      functionDeclarations: [
-        { name: "update_calories", description: "تغییر کالری دریافتی روزانه", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
-        { name: "update_water", description: "تغییر مقدار آب مصرفی (لیتر)", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
-        { name: "update_sleep", description: "تغییر ساعت خواب", parameters: { type: "OBJECT", properties: { amount: { type: "NUMBER" } }, required: ["amount"] } },
-        { name: "log_workout", description: "ثبت یک تمرین جدید و اضافه کردن کالری سوخته", parameters: { type: "OBJECT", properties: { exercise: { type: "STRING" }, sets: { type: "NUMBER" }, reps: { type: "NUMBER" }, calories_burned: { type: "NUMBER" } }, required: ["exercise", "calories_burned"] } }
-      ]
-    }];
-
     async function sendMessage() {
       let input = document.getElementById('chat-input');
       let text = input.value.trim();
       if(!text) return;
-      if(!state.apiKey) { alert('اول برو تب تنظیمات و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
+      if(!state.apiKey) { alert('اول برو تب پروفایل و کلید Gemini رو تنظیم کن!'); switchTab('profile'); return; }
       
       input.value = '';
       addMessage(text, 'user');
@@ -366,24 +535,24 @@
       try {
         let reply = await callGeminiAI(text);
         loadingMsg.innerText = reply;
-        speak(reply);
+        if(state.ttsEnabled) speak(reply);
       } catch(e) {
         loadingMsg.innerText = "❌ خطا: " + e.message;
       }
     }
 
     async function callGeminiAI(userText, mediaParts = null) {
-      const systemPrompt = `تو یک مربی بدنسازی حرفه‌ای و انگیزشی هستی.
-تو دسترسی کامل (God Mode) داری. اگر کاربر خواست چیزی رو تغییر بده، حتما از ابزارها (Tools) استفاده کن.
-وضعیت فعلی: کالری=${state.calories}، کالری سوخته=${state.caloriesBurned}، آب=${state.water}، خواب=${state.sleep}.
-همیشه کوتاه، مفید و انگیزشی جواب بده.`;
+      const systemPrompt = `تو یک مربی بدنسازی حرفه‌ای و دستیار هوشمند هستی.
+تو دسترسی کامل (God Mode) داری. اگر کاربر خواست چیزی رو تغییر بده (کالری، آب، ثبت تمرین)، حتماً از ابزارها (Tools) استفاده کن.
+وضعیت فعلی: کالری=${state.calories}، کالری سوخته=${state.caloriesBurned}، آب=${state.water}.
+دقت کن: اگر سوالی پرسید دقیق جواب بده. از خودت چیزی نساز. کوتاه و مفید جواب بده.`;
 
       let contents = mediaParts 
         ? [{ role: "user", parts: mediaParts }] 
-        : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام کاربر: " + userText }] }];
+        : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام: " + userText }] }];
 
-      // مدل جدید طبق خواسته خود گوگل
-      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${state.apiKey}`;
+      // مدل استاندارد 1.5-flash با تنظیمات ضد توهم
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.apiKey}`;
       
       try {
         let res = await fetch(API_URL, {
@@ -392,7 +561,7 @@
           body: JSON.stringify({ 
             contents: contents, 
             tools: AI_TOOLS,
-            generationConfig: { temperature: 0.4, maxOutputTokens: 1000 }
+            generationConfig: { temperature: 0.1, maxOutputTokens: 800 }
           })
         });
 
@@ -414,7 +583,8 @@
                 { role: "model", parts: [{ functionCall: fn }] },
                 { role: "user", parts: [{ functionResponse: { name: fn.name, response: { result: resultText } } }] }
               ],
-              tools: AI_TOOLS
+              tools: AI_TOOLS,
+              generationConfig: { temperature: 0.1 }
             })
           });
           let data2 = await res2.json();
@@ -434,38 +604,37 @@
     function executeTool(fn) {
       if(fn.name === "update_calories") { state.calories = fn.args.amount; saveState(); return `کالری به ${state.calories} تغییر یافت.`; } 
       if(fn.name === "update_water") { state.water = fn.args.amount; saveState(); return `آب به ${state.water} لیتر تغییر یافت.`; }
-      if(fn.name === "update_sleep") { state.sleep = fn.args.amount; saveState(); return `خواب به ${state.sleep} ساعت تغییر یافت.`; }
       if(fn.name === "log_workout") {
          state.workouts.push({ exercise: fn.args.exercise, sets: fn.args.sets || 1, reps: fn.args.reps || 0, calories: fn.args.calories_burned });
          state.caloriesBurned += fn.args.calories_burned;
          saveState();
          return `تمرین ${fn.args.exercise} ثبت شد و ${fn.args.calories_burned} کالری اضافه شد.`;
       }
-      return "ابزار ناشناخته";
+      return "عملیات انجام شد.";
     }
 
     // ==========================================
-    // 5. VISION (تحلیل ویدیو)
+    // 4. VISION (تحلیل ویدیو)
     // ==========================================
     document.getElementById('media-upload').addEventListener('change', async (e) => {
       let file = e.target.files[0];
       if(!file) return;
-      if(!state.apiKey) { alert('اول برو تب تنظیمات و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
+      if(!state.apiKey) { alert('اول برو تب پروفایل و کلید Gemini رو تنظیم کن!'); switchTab('profile'); return; }
 
-      addMessage(`فایل ارسال شد`, 'user');
-      let loadingMsg = addMessage('⏳ دارم ویدیو رو بررسی می‌کنم، صبر کن...', 'ai');
+      addMessage(`📎 فایل ارسال شد`, 'user');
+      let loadingMsg = addMessage('⏳ دارم ویدیو رو تحلیل می‌کنم...', 'ai');
 
       try {
         let reader = new FileReader();
         reader.onload = async () => {
           let base64 = reader.result.split(',')[1];
           
-          const videoPrompt = `تو یک مربی بدنسازی هستی. این ویدیو را با دقت ببین.
-          ۱. تشخیص بده چه حرکتی انجام می‌شود.
-          ۲. حدس بزن چند ست و چند تکرار انجام شده است.
-          ۳. تخمین بزن چقدر کالری سوزانده شده (برای یک فرد ۷۵ کیلویی).
-          ۴. حتماً از ابزار "log_workout" استفاده کن تا این تمرین را ثبت کنی.
-          ۵. در نهایت یک جمله انگیزشی بده که تایید کنی ثبت شد.`;
+          const videoPrompt = `این ویدیو رو تحلیل کن.
+          ۱. حرکت چیه؟
+          ۲. چند ست و تکرار؟
+          ۳. چقدر کالری سوزونده؟
+          ۴. حتماً از ابزار "log_workout" برای ثبت استفاده کن.
+          ۵. یک جمله تایید بده.`;
 
           let mediaParts = [
             { inlineData: { mimeType: file.type, data: base64 } },
@@ -474,7 +643,7 @@
 
           let reply = await callGeminiAI("", mediaParts);
           loadingMsg.innerText = reply;
-          speak(reply);
+          if(state.ttsEnabled) speak(reply);
           e.target.value = ''; 
         };
         reader.readAsDataURL(file);
@@ -484,32 +653,44 @@
     });
 
     // ==========================================
-    // 6. SPEECH-TO-TEXT (میکروفن)
+    // 5. SPEECH (Voice)
     // ==========================================
-    let isRecording = false;
-    let recognition;
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      let u = new SpeechSynthesisUtterance(text);
+      u.lang = 'fa-IR';
+      u.rate = 1.0;
+      window.speechSynthesis.speak(u);
+    }
 
+    let isRecording = false, recognition;
     function toggleMic() {
-      if(!('webkitSpeechRecognition' in window)) { alert('مرورگر شما میکروفن را پشتیبانی نمی‌کند.'); return; }
-      let micBtn = document.getElementById('mic-btn');
+      if(!('webkitSpeechRecognition' in window)) return alert('مرورگر شما از میکروفن پشتیبانی نمی‌کند.');
+      let btn = document.getElementById('mic-btn');
       
-      if(isRecording) { recognition.stop(); isRecording = false; micBtn.classList.remove('recording'); return; }
-
+      if(isRecording) { 
+        recognition.stop(); 
+        isRecording = false; 
+        btn.classList.remove('recording'); 
+        return; 
+      }
+      
       recognition = new webkitSpeechRecognition();
       recognition.lang = 'fa-IR'; 
       recognition.interimResults = false;
 
-      recognition.onstart = () => { isRecording = true; micBtn.classList.add('recording'); };
-      recognition.onresult = (event) => {
-        let text = event.results[0][0].transcript;
-        document.getElementById('chat-input').value = text;
-        sendMessage();
+      recognition.onstart = () => { isRecording = true; btn.classList.add('recording'); };
+      recognition.onresult = (event) => { 
+        document.getElementById('chat-input').value = event.results[0][0].transcript; 
+        sendMessage(); 
       };
-      recognition.onend = () => { isRecording = false; micBtn.classList.remove('recording'); };
+      recognition.onend = () => { isRecording = false; btn.classList.remove('recording'); };
       recognition.start();
     }
 
+    // Initialization
     updateUI();
   </script>
 </body>
-  </html>
+        </html>
