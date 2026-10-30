@@ -137,11 +137,11 @@
     <section class="screen" data-screen="profile">
       <div class="top-bar"><h1>تنظیمات</h1></div>
       <div class="card">
-        <div class="label">کلید Gemini API</div>
+        <div class="label">کلید Gemini API (فقط یکبار وارد کنید)</div>
         <div class="input-group">
-          <input type="password" id="api-key" placeholder="کلید خود را اینجا وارد کنید...">
+          <input type="password" id="api-key" placeholder="AQ.Ab8...">
         </div>
-        <button class="btn" onclick="saveApiKey()">ذخیره کلید</button>
+        <button class="btn" onclick="saveApiKey()">ذخیره کلید در گوشی</button>
         <p class="muted" id="key-status">وضعیت: ذخیره نشده</p>
       </div>
       
@@ -165,10 +165,11 @@
 
   <script>
     // ==========================================
-    // 1. STATE & LOCAL STORAGE (حافظه دائمی)
+    // 1. STATE & LOCAL STORAGE
     // ==========================================
     let state = JSON.parse(localStorage.getItem('appState')) || {
-      apiKey: '', ttsEnabled: true,
+      apiKey: '', 
+      ttsEnabled: true,
       calories: 2000, caloriesBurned: 0, water: 1.5, sleep: 7,
       workouts: [] 
     };
@@ -195,7 +196,7 @@
       
       if(state.apiKey) {
         document.getElementById('api-key').value = state.apiKey;
-        document.getElementById('key-status').innerText = "وضعیت: ✅ کلید ذخیره شده";
+        document.getElementById('key-status').innerText = "وضعیت: ✅ کلید در گوشی ذخیره شده";
         document.getElementById('key-status').style.color = "var(--accent-2)";
       }
       
@@ -222,7 +223,7 @@
       if(key.length > 10) { 
         state.apiKey = key;
         saveState();
-        alert('کلید با موفقیت ذخیره شد!');
+        alert('کلید در حافظه گوشی شما ذخیره شد! دیگر نیازی به وارد کردن مجدد نیست.');
       } else { alert('کلید وارد شده معتبر نیست.'); }
     }
 
@@ -232,7 +233,7 @@
     }
 
     // ==========================================
-    // 3. TEXT-TO-SPEECH (صدای مربی)
+    // 3. TEXT-TO-SPEECH
     // ==========================================
     function speak(text) {
       if (!state.ttsEnabled || !('speechSynthesis' in window)) return;
@@ -254,7 +255,7 @@
     }
 
     // ==========================================
-    // 4. AI BRAIN & GOD MODE (ارتباط با هوش مصنوعی)
+    // 4. AI BRAIN & GOD MODE
     // ==========================================
     const AI_TOOLS = [{
       functionDeclarations: [
@@ -269,7 +270,7 @@
       let input = document.getElementById('chat-input');
       let text = input.value.trim();
       if(!text) return;
-      if(!state.apiKey) { alert('اول برو تب پروفایل و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
+      if(!state.apiKey) { alert('اول برو تب تنظیمات و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
       
       input.value = '';
       addMessage(text, 'user');
@@ -294,7 +295,6 @@
         ? [{ role: "user", parts: mediaParts }] 
         : [{ role: "user", parts: [{ text: systemPrompt + "\n\nپیام کاربر: " + userText }] }];
 
-      // مرحله ۱: ارسال پیام به مدل
       let res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -306,12 +306,10 @@
 
       let part = data.candidates[0].content.parts[0];
 
-      // مرحله ۲: بررسی اینکه آیا AI می‌خواهد ابزاری را اجرا کند؟
       if(part.functionCall) {
         let fn = part.functionCall;
-        let resultText = executeTool(fn); // اجرای ابزار روی گوشی
+        let resultText = executeTool(fn); 
         
-        // مرحله ۳: برگرداندن نتیجه به AI تا پاسخ نهایی را بسازد
         let res2 = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${state.apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -332,30 +330,12 @@
       return part.text || "متوجه نشدم.";
     }
 
-    // تابع اجرای دستورات AI (God Mode)
     function executeTool(fn) {
-      if(fn.name === "update_calories") {
-         state.calories = fn.args.amount;
-         saveState();
-         return `کالری به ${state.calories} تغییر یافت.`;
-      } 
-      if(fn.name === "update_water") {
-         state.water = fn.args.amount;
-         saveState();
-         return `آب به ${state.water} لیتر تغییر یافت.`;
-      }
-      if(fn.name === "update_sleep") {
-         state.sleep = fn.args.amount;
-         saveState();
-         return `خواب به ${state.sleep} ساعت تغییر یافت.`;
-      }
+      if(fn.name === "update_calories") { state.calories = fn.args.amount; saveState(); return `کالری به ${state.calories} تغییر یافت.`; } 
+      if(fn.name === "update_water") { state.water = fn.args.amount; saveState(); return `آب به ${state.water} لیتر تغییر یافت.`; }
+      if(fn.name === "update_sleep") { state.sleep = fn.args.amount; saveState(); return `خواب به ${state.sleep} ساعت تغییر یافت.`; }
       if(fn.name === "log_workout") {
-         state.workouts.push({
-           exercise: fn.args.exercise,
-           sets: fn.args.sets || 1,
-           reps: fn.args.reps || 0,
-           calories: fn.args.calories_burned
-         });
+         state.workouts.push({ exercise: fn.args.exercise, sets: fn.args.sets || 1, reps: fn.args.reps || 0, calories: fn.args.calories_burned });
          state.caloriesBurned += fn.args.calories_burned;
          saveState();
          return `تمرین ${fn.args.exercise} ثبت شد و ${fn.args.calories_burned} کالری اضافه شد.`;
@@ -364,12 +344,12 @@
     }
 
     // ==========================================
-    // 5. VISION (آپلود ویدیو - حتی بدون متن!)
+    // 5. VISION (تحلیل ویدیو)
     // ==========================================
     document.getElementById('media-upload').addEventListener('change', async (e) => {
       let file = e.target.files[0];
       if(!file) return;
-      if(!state.apiKey) { alert('اول برو تب پروفایل و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
+      if(!state.apiKey) { alert('اول برو تب تنظیمات و کلید Gemini رو وارد کن!'); switchTab('profile'); return; }
 
       addMessage(`📎 فایل ارسال شد`, 'user');
       let loadingMsg = addMessage('⏳ دارم ویدیو رو بررسی می‌کنم، صبر کن...', 'ai');
@@ -379,7 +359,6 @@
         reader.onload = async () => {
           let base64 = reader.result.split(',')[1];
           
-          // پرامپت مخفی: کاربر لازم نیست چیزی تایپ کند، این پرامپت خودکار ارسال می‌شود
           const videoPrompt = `تو یک مربی بدنسازی هستی. این ویدیو را با دقت ببین.
           ۱. تشخیص بده چه حرکتی انجام می‌شود.
           ۲. حدس بزن چند ست و چند تکرار انجام شده است.
@@ -395,7 +374,7 @@
           let reply = await callGeminiAI("", mediaParts);
           loadingMsg.innerText = reply;
           speak(reply);
-          e.target.value = ''; // ریست کردن اینپوت
+          e.target.value = ''; 
         };
         reader.readAsDataURL(file);
       } catch(err) { 
@@ -404,7 +383,7 @@
     });
 
     // ==========================================
-    // 6. SPEECH-TO-TEXT (حرف زدن با میکروفن)
+    // 6. SPEECH-TO-TEXT (میکروفن)
     // ==========================================
     let isRecording = false;
     let recognition;
@@ -413,12 +392,7 @@
       if(!('webkitSpeechRecognition' in window)) { alert('مرورگر شما میکروفن را پشتیبانی نمی‌کند.'); return; }
       let micBtn = document.getElementById('mic-btn');
       
-      if(isRecording) {
-        recognition.stop();
-        isRecording = false;
-        micBtn.classList.remove('recording');
-        return;
-      }
+      if(isRecording) { recognition.stop(); isRecording = false; micBtn.classList.remove('recording'); return; }
 
       recognition = new webkitSpeechRecognition();
       recognition.lang = 'fa-IR'; 
@@ -434,7 +408,6 @@
       recognition.start();
     }
 
-    // اجرای اولیه
     updateUI();
   </script>
 </body>
