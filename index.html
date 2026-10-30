@@ -338,8 +338,8 @@ async function gemini(contents){
  const k=getKey();if(!k)throw new Error('ابتدا کلید API را در تنظیمات وارد کن.');
  const ac=new AbortController();setTimeout(()=>ac.abort(),60000);
  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName()}:generateContent`,{method:'POST',signal:ac.signal,headers:{'Content-Type':'application/json','x-goog-api-key':k},
-  body:JSON.stringify({systemInstruction:{parts:[{text:SYS()}]},contents,tools:[{functionDeclarations:DECL}],generationConfig:{temperature:0.1}})});
- const j=await r.json();if(!r.ok)throw new Error(j.error?.message||'خطای شبکه');return j.candidates?.[0]?.content||{parts:[{text:'پاسخی دریافت نشد.'}]};
+  body:JSON.stringify({systemInstruction:{parts:[{text:SYS()}]},contents,tools:[{functionDeclarations:DECL}],generationConfig:Object.assign({temperature:0.1},window.noThink?{}:{thinkingConfig:{thinkingLevel:'low'}})})});
+ const j=await r.json();if(!r.ok){if(!window.noThink&&/think/i.test(j.error?.message||'')){window.noThink=true;return gemini(contents)}throw new Error(j.error?.message||'خطای شبکه')}return j.candidates?.[0]?.content||{parts:[{text:'پاسخی دریافت نشد.'}]};
 }
 async function ask(userParts,label){
  if(busy)return;busy=true;S.chat.push({r:'u',t:label});page='chat';render();
@@ -352,7 +352,9 @@ async function ask(userParts,label){
    if(!calls.length){const t=(out.parts||[]).map(p=>p.text||'').join('').trim();S.chat.push({r:'a',t});speak(t);break}
    const res=calls.map(c=>{let r;try{r=TOOLS[c.functionCall.name](c.functionCall.args||{})}catch(e){r={error:String(e)}}
     S.chat.push({r:'t',t:'اجرا شد: '+c.functionCall.name});return{functionResponse:{name:c.functionCall.name,response:r}}});
-   contents.push({role:'user',parts:res});
+   const said=(out.parts||[]).map(p=>p.text||'').join('').trim();
+   const sum=calls.map(c=>{const a=c.functionCall.args||{},n=c.functionCall.name;return n==='log_food'?'غذا ثبت شد: '+a.name+' ('+fa(a.calories)+' کالری)':n==='log_workout'?'تمرین ثبت شد: '+a.name+' ('+fa(a.calories_burned)+' کالری سوخته)':n==='set_calories'?'کالری به‌روز شد':n==='set_water'?'آب به‌روز شد':'وزن به‌روز شد'}).join('\n');
+   const t=said||sum;S.chat.push({r:'a',t});speak(t);break;
   }
  }catch(e){S.chat.push({r:'a',t:e.name==='AbortError'?'پاسخی نیومد (۶۰ ثانیه). اینترنت یا فیلترشکن رو چک کن.':'خطا ('+modelName()+'): '+e.message})}
  busy=false;save();render();
