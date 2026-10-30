@@ -206,7 +206,7 @@ if(S.date!==today()){S.history=(S.history||[]).concat([{d:S.date,eaten:S.eaten,b
  Object.assign(S,{date:today(),eaten:0,burned:0,water:0,p:0,c:0,f:0,foods:[]})}
 const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
 const getKey=()=>localStorage.getItem('gemini_api_key')||'';
-const MODEL='gemini-2.5-flash';
+const MODEL='gemini-3.8-flash';
 let page='food',busy=false;
 
 /* ---------- Data ---------- */
